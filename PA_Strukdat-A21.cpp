@@ -41,6 +41,7 @@ using namespace std;
 /**/ 	Node *prev;
 /**/ 	dataLaundry data;
 /**/    dataAkun akun; 
+/**/    dataAntrian antrian;
 /**/ 	Node *next;
 /**/ };
 /**/
