@@ -106,7 +106,7 @@ bool First_Menu(){
 			Login();
 			break;
 		case '2':
-			Register();
+			// Register();
 			break;
 		case '3':
 			exit(0);
