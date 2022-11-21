@@ -3,6 +3,7 @@
 #include <windows.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include <time.h>
 using namespace std;
 
 int main ()
@@ -21,7 +22,8 @@ int main ()
   int Min    = local_time.tm_min;
   int Sec    = local_time.tm_sec;
 
-  cout << "Hour: " << Hour << ":" << Min << ":" << Sec << endl;
+  cout << "Tanggal: " << Day << "-" << Month << "-" << Year << endl;
+  cout << "Jam: " << Hour << ":" << Min << ":" << Sec << endl;
   
   return 0;
 }
