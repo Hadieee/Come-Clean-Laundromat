@@ -7,55 +7,50 @@
 using namespace std;
 
 ////   D E K L A R A S I   ////
-/**/ struct dataLaundry
-{
-	/**/ string nama;
-	/**/ int nomor_hp;
-	/**/ string alamat;
-	/**/ char kategori;
-	/**/ double berat;
-	/**/ int harga;
-	/**/ int total;
+/**/ struct dataLaundry{
+/**/ string nama;
+/**/ int nomor_hp;
+/**/ string alamat;
+/**/ char kategori;
+/**/ double berat;
+/**/ int harga;
+/**/ int total;
 /**/ };
 ////
-/**/ struct dataRiwayat
-{
-	/**/ string nama;
-	/**/ int nomor_hp;
-	/**/ string alamat;
-	/**/ string tanggal;
-	/**/ char kategori;
-	/**/ double berat;
-	/**/ int harga;
-	/**/ int total;
+/**/ struct dataRiwayat{
+/**/ string nama;
+/**/ int nomor_hp;
+/**/ string alamat;
+/**/ string tanggal;
+/**/ char kategori;
+/**/ double berat;
+/**/ int harga;
+/**/ int total;
 /**/ };
 ////
-/**/ struct dataAkun
-{
-	/**/ bool tipe;
-	/**/ string username;
-	/**/ string password;
-	/**/ string nama;
-	/**/ string alamat;
-	/**/ string email;
-	/**/ int no_hp;
+/**/ struct dataAkun{
+/**/ bool tipe;
+/**/ string username;
+/**/ string password;
+/**/ string nama;
+/**/ string alamat;
+/**/ string email;
+/**/ int no_hp;
 /**/ };
 /**/
-/**/ struct Node
-{
-	/**/ Node *prev;
-	/**/ dataLaundry data;
-	/**/ dataAkun akun;
-	/**/ dataAntrian antrian;
-	/**/ Node *next;
+/**/ struct Node{
+/**/ Node *prev;
+/**/ dataLaundry data;
+/**/ dataAkun akun;
+/**/ Node *next;
 /**/ };
 /**/
 /**/
 /**/ struct Node *HEAD = NULL;
 /**/ struct Node *TAIL = NULL;
 /**/
-/**/ struct Node *HEADRiw = NULL;
-/**/ struct Node *TAILRiw = NULL;
+/**/ struct Node *HEADLOG = NULL;
+/**/ struct Node *TAILLOG = NULL;
 /**/
 /**/ struct Node *HEADAcc = NULL;
 /**/ struct Node *TAILAcc = NULL;
@@ -67,19 +62,19 @@ using namespace std;
 				   /**/ 10000, 30000};
 /**/
 ////       W A K T U       ///// 
-/**/ time_t current_time;
-/**/ struct tm  local_time;
+/**/ //time_t current_time;
+/**/ //struct tm local_time;
 /**/
-/**/ time ( &current_time );
-/**/ localtime_s(&local_time, &current_time);
+/**/ //time ( &current_time );
+/**/ //localtime_s(&local_time, &current_time);
 /**/
-/**/ int Year   = local_time.tm_year + 1900;
-/**/ int Month  = local_time.tm_mon + 1;
-/**/ int Day    = local_time.tm_mday;
+/**/ //int Year   = local_time.tm_year + 1900;
+/**/ //int Month  = local_time.tm_mon + 1;
+/**/ //int Day    = local_time.tm_mday;
 /**/
-/**/ int Hour   = local_time.tm_hour;
-/**/ int Min    = local_time.tm_min;
-/**/ int Sec    = local_time.tm_sec;
+/**/ //int Hour   = local_time.tm_hour;
+/**/ //int Min    = local_time.tm_min;
+/**/ //int Sec    = local_time.tm_sec;
 /**/
 ////   P R O T O T Y P E   ////
 // --------- Menu ------- //
@@ -91,15 +86,15 @@ using namespace std;
 /**/ void Version(); // Hapus Nanti
 /**/ void Show(Node *head, Node *tail, char jalur);
 /**/ int lenLL(Node *head);
-/**/
+/**/ void To_Riwayat(Node **head, Node **tail, Node **headlog, Node **taillog);
 // --------- Utama ------- //
 /**/ void Register(Node **head, Node **tail);
 /**/ void Login();
 /**/
 // --------- User -------- //
 /**/ void Add_Last(Node **head, Node **tail);
-/**/ void updateData(string username, Node *head, Node *tail);
-/**/
+/**/ void UpdateData(string username, Node **head, Node **tail);
+/**/ 
 // --------- Admin ------- //
 /**/ void Delete_First(Node **head, Node **tail);
 /**/
@@ -110,17 +105,14 @@ int main()
 {
 	system("color 70");
 
-	while (First_Menu() == true)
-	{
-	}
+	while (First_Menu() == true){}
 
 	return 0;
 }
 
 // =======	DAFTAR VOID MENU ======
 
-bool First_Menu()
-{
+bool First_Menu(){
 
 	cout << "\n Aplikasi Laundry\
 		     \n Versi 1.0";
@@ -160,8 +152,8 @@ bool First_Menu()
 	return true;
 }
 
-bool Admin_Menu()
-{
+bool Admin_Menu(){
+	
 	system("CLS");
 
 	cout << "\n  Selamat Datang!!!\n\
@@ -183,6 +175,7 @@ bool Admin_Menu()
 		Delete_First(&HEAD, &TAIL);
 		break;
 	case '4':
+		Show(HEADLOG, TAILLOG, '0');
 		break;
 	case '5':
 		break;
@@ -196,8 +189,8 @@ bool Admin_Menu()
 	return true;
 }
 
-bool User_Menu()
-{
+bool User_Menu(){
+	
 	system("CLS");
 
 	cout << "\n  Selamat Datang!!!\n\
@@ -214,7 +207,7 @@ bool User_Menu()
 	case '2':
 		break;
 	case '3':
-		updateData("username", &HEAD, &TAIL);
+		UpdateData("username", &HEAD, &TAIL);
 		break;
 	case '4':
 		return false;
@@ -228,8 +221,7 @@ bool User_Menu()
 
 // ========= ISI MENU =========
 
-void Version()
-{
+void Version(){
 
 	system("CLS");
 
@@ -361,8 +353,8 @@ void Add_Last(Node **head, Node **tail)
 	system("pause");
 }
 
-void Register(Node **head, Node **tail)
-{
+void Register(Node **head, Node **tail){
+	
 	system("cls");
 	string nama, email, alamat, username, password;
 	int no_hp;
@@ -408,60 +400,52 @@ void Register(Node **head, Node **tail)
 	newNode->akun.username = username;
 	newNode->akun.password = password;
 
-	if (*head == NULL && *tail == NULL)
-	{
+	if (*head == NULL && *tail == NULL){
 		*head = newNode;
 		*tail = newNode;
 	}
-	else
-	{
+	else{
 		(*head)->prev = newNode;
 		newNode->next = *head;
 		newNode->prev = NULL;
 	}
 	cout << endl;
 	cout << " =======================================================" << endl;
-	cout << "|         Data Akun Telah Berhasil Ditambahkan       |" << endl;
+	cout << "|            Data Akun Telah Berhasil Dibuat           |" << endl;
 	cout << " =======================================================" << endl;
 	system("pause");
 }
 
 // =========================== ADMIN ======================
 
-void Show(Node *head, Node *tail, char jalur)
-{
+void Show(Node *head, Node *tail, char jalur){
 
 	system("CLS");
 
-	if (head == NULL)
-	{
+	if (head == NULL){
 		cout << "  =======================================================" << endl;
 		cout << " |                  LinkedList Kosong                   |" << endl;
 		cout << "  =======================================================" << endl;
 		system("pause");
 		return;
 	}
-	else
-	{
+	else{
 		Node *temp;
 		int indeks;
 
 		// Ascending
-		if (jalur == '0')
-		{
+		if (jalur == '0'){
 			indeks = 1;
 			temp = head;
 		}
 
 		// Descending
-		else
-		{
+		else{
 			indeks = lenLL(head);
 			temp = tail;
 		}
 
-		while (temp != NULL)
-		{
+		while (temp != NULL){
 
 			cout << " [" << indeks << "]" << endl;
 			cout << " Nama Customer\t: " << temp->data.nama << endl;
@@ -472,15 +456,13 @@ void Show(Node *head, Node *tail, char jalur)
 
 			// Traversal
 			// Ascending
-			if (jalur == '0')
-			{
+			if (jalur == '0'){
 				temp = temp->next;
 				indeks++;
 			}
 
 			// Descending
-			else
-			{
+			else{
 				temp = temp->prev;
 				indeks--;
 			}
@@ -490,17 +472,40 @@ void Show(Node *head, Node *tail, char jalur)
 	}
 }
 
-void Delete_First(Node **head, Node **tail)
-{
-	if (*head == NULL && *tail == NULL)
+
+void To_Riwayat(Node **head, Node **tail, Node **headlog, Node **taillog){
+	Node *newNode = new Node;
+
+	newNode->data.nama     = (*head)->data.nama;
+	newNode->data.nomor_hp = (*head)->data.nomor_hp;
+	newNode->data.kategori = (*head)->data.kategori;
+	newNode->data.berat    = (*head)->data.berat;
+	newNode->data.harga    = (*head)->data.harga;
+	newNode->prev = *taillog;
+	newNode->next = NULL;
+
+	if (*headlog == NULL && *taillog == NULL)
 	{
+		*headlog = newNode;
+		*taillog = newNode;
+	}
+	else
+	{
+		(*taillog)->next = newNode;
+		*taillog = newNode;
+	}
+}
+
+void Delete_First(Node **head, Node **tail){
+	
+	if (*head == NULL && *tail == NULL){
+		
 		cout << "  =======================================================" << endl;
 		cout << " |                  LinkedList Kosong                   |" << endl;
 		cout << "  =======================================================" << endl;
 		system("pause");
 	}
-	else if ((*head)->next == NULL)
-	{
+	else if ((*head)->next == NULL){
 		Node *del = *head;
 		*head = NULL;
 		*tail = NULL;
@@ -510,8 +515,7 @@ void Delete_First(Node **head, Node **tail)
 		cout << "  =======================================================" << endl;
 		system("pause");
 	}
-	else
-	{
+	else{
 		Node *del;
 		del = *head;
 		*head = (*head)->next;
@@ -527,8 +531,8 @@ void Delete_First(Node **head, Node **tail)
 
 // ========================= Others ===================
 
-void Daftar_Kategori()
-{
+void Daftar_Kategori(){
+	
 	cout << "  ------------------------------------------------------- \
     	   \n |                   JENIS LAUNDRY                       |\
     	   \n  ------------------------------------------------------- \
@@ -544,9 +548,10 @@ void Daftar_Kategori()
 		 << endl;
 }
 
-void updateData(string username, Node *head, Node *tail) {
+void UpdateData(string username, Node **head, Node **tail){
 	system("cls");
-	string email, alamat, username, password;
+	string email, alamat, password, nama;
+	int no_hp;
 
 	cout << " =========================================================\
            \n                          FORM USER                       \
@@ -579,8 +584,8 @@ void updateData(string username, Node *head, Node *tail) {
 	// Tambahkan Node Bantu
 	Node *temp = *head;
 
-	while(temp != NULL)
-	{
+	while(temp != NULL){
+		
 		if(temp->data.nama == username)
 		{
 			break;
