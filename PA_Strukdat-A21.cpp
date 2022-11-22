@@ -638,20 +638,20 @@ void UpdateData(string username, Node **head, Node **tail){
 		
 		if(temp->data.nama == username)
 		{
+			temp->akun.nama = nama;
+			temp->akun.no_hp = no_hp;
+			temp->akun.email = email;
+			temp->akun.alamat = alamat;
+			temp->akun.password = password;
+
+			cout << endl;
+			cout << "  =======================================================" << endl;
+			cout << " |         Data Akun Telah Berhasil Diupdate !           |" << endl;
+			cout << "  =======================================================" << endl;
+			system("pause");
 			break;
 		}
+
 		temp = temp->next;
 	}
-
-	temp->akun.nama = nama;
-	temp->akun.no_hp = no_hp;
-	temp->akun.email = email;
-	temp->akun.alamat = alamat;
-	temp->akun.password = password;
-
-	cout << endl;
-	cout << "  =======================================================" << endl;
-	cout << " |         Data Akun Telah Berhasil Diupdate !           |" << endl;
-	cout << "  =======================================================" << endl;
-	system("pause");
 }
