@@ -8,41 +8,40 @@ using namespace std;
 
 ////   D E K L A R A S I   ////
 /**/ struct dataLaundry{
-/**/ string nama;
-/**/ int nomor_hp;
-/**/ string alamat;
-/**/ char kategori;
-/**/ double berat;
-/**/ int harga;
-/**/ int total;
+/**/ 	string nama;
+/**/ 	long long int nomor_hp;
+/**/ 	string alamat;
+/**/ 	char kategori;
+/**/ 	double berat;
+/**/ 	int harga;
+/**/ 	int total;
 /**/ };
 ////
 /**/ struct dataRiwayat{
-/**/ string nama;
-/**/ int nomor_hp;
-/**/ string alamat;
-/**/ string tanggal;
-/**/ char kategori;
-/**/ double berat;
-/**/ int harga;
-/**/ int total;
+/**/ 	string nama;
+/**/ 	long long int nomor_hp;
+/**/	string alamat;
+/**/ 	long long int tanggal;
+/**/ 	char kategori;
+/**/ 	double berat;
+/**/ 	int harga;
+/**/ 	int total;
 /**/ };
 ////
 /**/ struct dataAkun{
-/**/ bool tipe;
-/**/ string username;
-/**/ string password;
-/**/ string nama;
-/**/ string alamat;
-/**/ string email;
-/**/ int no_hp;
+/**/ 	string username;
+/**/ 	string password;
+/**/ 	string nama;
+/**/ 	string alamat;
+/**/ 	string email;
+/**/ 	long long int no_hp;
 /**/ };
 /**/
 /**/ struct Node{
-/**/ Node *prev;
-/**/ dataLaundry data;
-/**/ dataAkun akun;
-/**/ Node *next;
+/**/ 	Node *prev;
+/**/ 	dataLaundry data;
+/**/ 	dataAkun akun;
+/**/ 	Node *next;
 /**/ };
 /**/
 /**/
@@ -58,24 +57,17 @@ using namespace std;
 /**/ struct Node *posisi;
 /**/
 /**/ int hrg[8] = {8000, 25000, 22000,
-				   /**/ 15000, 10000, 20000,
-				   /**/ 10000, 30000};
+/**/ 			   15000, 10000, 20000,
+/**/ 			   10000, 30000};
 /**/
-////       W A K T U       ///// 
-/**/ //time_t current_time;
-/**/ //struct tm local_time;
+/**/ string active_user = "";
 /**/
-/**/ //time ( &current_time );
-/**/ //localtime_s(&local_time, &current_time);
 /**/
-/**/ //int Year   = local_time.tm_year + 1900;
-/**/ //int Month  = local_time.tm_mon + 1;
-/**/ //int Day    = local_time.tm_mday;
 /**/
-/**/ //int Hour   = local_time.tm_hour;
-/**/ //int Min    = local_time.tm_min;
-/**/ //int Sec    = local_time.tm_sec;
-/**/
+
+
+
+
 ////   P R O T O T Y P E   ////
 // --------- Menu ------- //
 /**/ bool First_Menu();
@@ -83,27 +75,34 @@ using namespace std;
 /**/ bool User_Menu();
 /**/
 // --------- Misc ------- //
-/**/ void Version(); // Hapus Nanti
+/**/ void Version(); //<----------- Hapus Nanti
 /**/ void Show(Node *head, Node *tail, char jalur);
-/**/ int lenLL(Node *head);
+/**/ int  lenLL(Node *head);
 /**/ void To_Riwayat(Node **head, Node **tail, Node **headlog, Node **taillog);
+/**/ long long int gettime();
+/**/
 // --------- Utama ------- //
 /**/ void Register(Node **head, Node **tail);
-/**/ void Login();
+/**/ void Login(Node *head, Node *tail);
 /**/
 // --------- User -------- //
 /**/ void Add_Last(Node **head, Node **tail);
 /**/ void UpdateData(string username, Node **head, Node **tail);
 /**/ 
 // --------- Admin ------- //
+/**/ void Admin_Acc(Node **head, Node **tail);  //<--------- Hapus Nanti
 /**/ void Delete_First(Node **head, Node **tail);
 /**/
 // --------- Others ------- //
 /**/ void Daftar_Kategori();
+/**/
+
+
 
 int main()
 {
 	system("color 70");
+	Admin_Acc(&HEADAcc, &TAILAcc);
 
 	while (First_Menu() == true){}
 
@@ -121,27 +120,20 @@ bool First_Menu(){
 		     \n  --+ 2. Register\
 		     \n  --+ 3. Exit\
 		     \n  --+ 4. Versi Aplikasi";
+		     
 	switch (getch())
 	{
 	case '1':
-		Login();
+		Login(HEADAcc, TAILAcc);
 		break;
 	case '2':
-		Register(&HEAD, &TAIL);
+		Register(&HEADAcc, &TAILAcc);
 		break;
 	case '3':
 		exit(0);
 		break;
 	case '4':
 		Version();
-		break;
-	case '5': // Hapus Nanti
-		while (Admin_Menu() == true)
-			;
-		break;
-	case '6': // Hapus Nanti
-		while (User_Menu() == true)
-			;
 		break;
 	default:
 		break;
@@ -156,7 +148,7 @@ bool Admin_Menu(){
 	
 	system("CLS");
 
-	cout << "\n  Selamat Datang!!!\n\
+	cout << "\n  Selamat Datang " << active_user <<"!!!\n\
 			 \n  --+ 1. Buat Pesanan\
 			 \n  --+ 2. Lihat Pesanan\
 			 \n  --+ 3. Hapus atau Selesaikan Pesanan\
@@ -180,6 +172,7 @@ bool Admin_Menu(){
 	case '5':
 		break;
 	case '6':
+		active_user = "";
 		return false;
 		break;
 	default:
@@ -193,7 +186,7 @@ bool User_Menu(){
 	
 	system("CLS");
 
-	cout << "\n  Selamat Datang!!!\n\
+	cout << "\n  Selamat Datang " << active_user <<"!!!\n\
 			 \n  --+ 1. Pesan\
 		     \n  --+ 2. Lihat Pesananku\
 		     \n  --+ 3. Update Data Akun\
@@ -210,6 +203,7 @@ bool User_Menu(){
 		UpdateData("username", &HEAD, &TAIL);
 		break;
 	case '4':
+		active_user = "";
 		return false;
 		break;
 	default:
@@ -256,9 +250,26 @@ int lenLL(Node *head)
 	return i;
 }
 
-void Login()
-{
+
+long long int gettime(){
+    time_t t = time(0);   // get time now
+    tm* now = localtime(&t);
+    
+	long long int Year = (now->tm_year + 1900) * 10000000000; 
+    long long int Mon =  (now->tm_mon + 1) * 100000000;
+    long long int Day =  now->tm_mday * 1000000;
+    
+    long long int Hour = now->tm_hour * 10000;
+    long long int Min =  now->tm_min * 100;
+    long long int Sec =  now->tm_sec;
+    
+    return Year + Mon + Day + Hour + Min + Sec;
+}
+
+
+void Login(Node *head, Node *tail){
 	string USN, PASS;
+	bool logged = false;
 
 	system("CLS");
 
@@ -267,25 +278,45 @@ void Login()
 
 	cout << " Password\t: ";
 	cin >> PASS;
-
-	if (true)
-	{
-		cout << " Bener gan";
-		// while(Admin_Menu() == true);
-		while (User_Menu() == true)
-			;
+	
+	// traversal
+	Node *temp = head;
+	
+	while(temp->akun.username != USN && temp->next != NULL){
+		temp = temp->next;
 	}
-	else
-	{
+	
+	if(temp->akun.username == USN){
+		if(temp->akun.password == PASS){
+			logged = true;
+		}
+	}
+	
+
+	if (logged){
+		cout << " Bener gan";
+		
+		active_user = temp->akun.username;
+		
+		if (USN == "Admind"){
+			while(Admin_Menu() == true){};
+		}
+		else{
+			while (User_Menu() == true){};
+		}
+	}
+	else{
 		cout << " Salah gan";
-		getch();
+		system("pause");
 	}
 }
 
+
+
+
 // ==================== USER ===================== //
 
-void Add_Last(Node **head, Node **tail)
-{
+void Add_Last(Node **head, Node **tail){
 	system("cls");
 	char kategori;
 	string nama;
@@ -357,7 +388,7 @@ void Register(Node **head, Node **tail){
 	
 	system("cls");
 	string nama, email, alamat, username, password;
-	int no_hp;
+	long long int no_hp;
 	cout << " =========================================================\
            \n                        FORM REGISTRASI                   \
     	   \n =========================================================\n\n \
@@ -408,6 +439,7 @@ void Register(Node **head, Node **tail){
 		(*head)->prev = newNode;
 		newNode->next = *head;
 		newNode->prev = NULL;
+		*head = newNode;
 	}
 	cout << endl;
 	cout << " =======================================================" << endl;
@@ -417,6 +449,24 @@ void Register(Node **head, Node **tail){
 }
 
 // =========================== ADMIN ======================
+
+void Admin_Acc(Node **head, Node **tail){   // Hapus Nanti
+
+	Node *newNode = new Node;
+	
+	newNode->akun.nama = "Admin";
+	newNode->akun.no_hp = 81200010002;
+	newNode->akun.email = "Admin@gmail.com";
+	newNode->akun.alamat = "Jalan bersamanya 12";
+	newNode->akun.username = "Admind";
+	newNode->akun.password = "123";
+	newNode->next = NULL;
+	newNode->prev = NULL;
+	
+	*head = newNode;
+	*tail = newNode;
+}
+
 
 void Show(Node *head, Node *tail, char jalur){
 
