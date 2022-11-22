@@ -19,6 +19,7 @@ using namespace std;
 /**/ 	double berat;
 /**/ 	int harga;
 /**/ 	int total;
+/**/	string username;
 /**/ };
 ////
 /**/ struct Data_Riwayat{
@@ -30,6 +31,7 @@ using namespace std;
 /**/ 	double berat;
 /**/ 	int harga;
 /**/ 	int total;
+/**/	string username;
 /**/ };
 ////
 /**/ struct Data_Akun{
@@ -407,6 +409,7 @@ void Add_Last(Node **head, Node **tail, Node *headacc){
 	newNode->data.kategori = kategori;
 	newNode->data.berat = berat;
 	newNode->data.harga = harga;
+	newNode->data.username = active_user;
 	newNode->prev = *tail;
 	newNode->next = NULL;
 
@@ -541,11 +544,11 @@ void Show(Node *head, Node *tail, char asc){
 		while (temp != NULL){
 
 			cout << " [" << indeks << "]" << endl;
-			cout << " Nama Customer\t: " << temp->data.nama << endl;
-			cout << " No Handphone\t: " << temp->data.nomor_hp << endl;
-			cout << " Jenis Cucian\t: " << temp->data.kategori << endl;
-			cout << " Berat Cucian\t: " << temp->data.berat << endl;
-			cout << " Harga Cucian\t: " << temp->data.harga << endl;
+			cout << " Nama Customer\t: "  << temp->data.nama << endl;
+			cout << " No Handphone\t: "   << temp->data.nomor_hp << endl;
+			cout << " Jenis Cucian\t: "   << temp->data.kategori << endl;
+			cout << " Berat Cucian\t: "   << temp->data.berat << endl;
+			cout << " Harga Cucian\t: "   << temp->data.harga << endl;
 
 			// Traversal
 			// Ascending
@@ -577,6 +580,7 @@ void To_Riwayat(Node **head, Node **tail, Node **headlog, Node **taillog){
 	newNode->log.kategori = (*head)->data.kategori;
 	newNode->log.berat    = (*head)->data.berat;
 	newNode->log.harga    = (*head)->data.harga;
+	newNode->log.username = (*head)->data.username;
 	newNode->log.tanggal  = gettime();
 	newNode->prev = *taillog;
 	newNode->next = NULL;
@@ -584,22 +588,20 @@ void To_Riwayat(Node **head, Node **tail, Node **headlog, Node **taillog){
 	if (*headlog == NULL && *taillog == NULL)
 	{
 		*taillog = newNode;
+		*headlog = newNode;
 	}
 	else
 	{
 		(*taillog)->next = newNode;
 		*taillog = newNode;
 	}
-	*headlog = newNode;
 	
-	Delete_First(&(*head), &(*tail));
-	
+	Delete_First(&(*head), &(*tail));	
 }
 
 void Delete_First(Node **head, Node **tail){
 	
 	if (*head == NULL && *tail == NULL){
-		
 		cout << "  =======================================================" << endl;
 		cout << " |                  LinkedList Kosong                   |" << endl;
 		cout << "  =======================================================" << endl;
@@ -711,8 +713,8 @@ void Update_Data(string username, Node **head, Node **tail){
 	}
 
 
-	cout << " Password Lama\t: ------\n";
-	cout << " Password Baru\t: ";
+	cout << " Password Lama\t\t: ------\n";
+	cout << " Password Baru\t\t: ";
 	fflush(stdin);
 	getline(cin, password);
 	if(password == "0"){
@@ -729,7 +731,7 @@ void Update_Data(string username, Node **head, Node **tail){
 
 	cout << endl;
 	cout << "  =======================================================" << endl;
-	cout << " |         Data Akun Telah Berhasil Diupdate !           |" << endl;
+	cout << " |          Data Akun Telah Berhasil Diupdate!           |" << endl;
 	cout << "  =======================================================" << endl;
 	system("pause");
 }
