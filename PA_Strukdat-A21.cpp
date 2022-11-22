@@ -87,7 +87,7 @@ using namespace std;
 /**/
 // --------- User -------- //
 /**/ void Add_Last(Node **head, Node **tail);
-/**/ void UpdateData(string username, Node **head, Node **tail);
+/**/ void updateData(string username, Node **head, Node **tail);
 /**/ 
 // --------- Admin ------- //
 /**/ void Admin_Acc(Node **head, Node **tail);  //<--------- Hapus Nanti
@@ -200,7 +200,7 @@ bool User_Menu(){
 	case '2':
 		break;
 	case '3':
-		UpdateData("username", &HEAD, &TAIL);
+		updateData(active_user, &HEADAcc, &TAILAcc);
 		break;
 	case '4':
 		active_user = "";
@@ -598,7 +598,7 @@ void Daftar_Kategori(){
 		 << endl;
 }
 
-void UpdateData(string username, Node **head, Node **tail){
+void updateData(string username, Node **head, Node **tail){
 	system("cls");
 	string email, alamat, password, nama;
 	int no_hp;
