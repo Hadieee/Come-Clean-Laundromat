@@ -6,8 +6,12 @@
 #include <time.h>
 using namespace std;
 
+#define Enter 13
+#define Backspace 8
+
+
 ////   D E K L A R A S I   ////
-/**/ struct dataLaundry{
+/**/ struct Data_Laundry{
 /**/ 	string nama;
 /**/ 	long long int nomor_hp;
 /**/ 	string alamat;
@@ -17,7 +21,7 @@ using namespace std;
 /**/ 	int total;
 /**/ };
 ////
-/**/ struct dataRiwayat{
+/**/ struct Data_Riwayat{
 /**/ 	string nama;
 /**/ 	long long int nomor_hp;
 /**/	string alamat;
@@ -28,7 +32,7 @@ using namespace std;
 /**/ 	int total;
 /**/ };
 ////
-/**/ struct dataAkun{
+/**/ struct Data_Akun{
 /**/ 	string username;
 /**/ 	string password;
 /**/ 	string nama;
@@ -39,8 +43,9 @@ using namespace std;
 /**/
 /**/ struct Node{
 /**/ 	Node *prev;
-/**/ 	dataLaundry data;
-/**/ 	dataAkun akun;
+/**/ 	Data_Laundry data;
+/**/	Data_Riwayat log;
+/**/ 	Data_Akun akun;
 /**/ 	Node *next;
 /**/ };
 /**/
@@ -60,8 +65,9 @@ using namespace std;
 /**/ 			   15000, 10000, 20000,
 /**/ 			   10000, 30000};
 /**/
-/**/ string active_user = "";
 /**/
+/**/ string active_user = "";
+/**/ 
 /**/
 /**/
 
@@ -87,7 +93,7 @@ using namespace std;
 /**/
 // --------- User -------- //
 /**/ void Add_Last(Node **head, Node **tail);
-/**/ void updateData(string username, Node **head, Node **tail);
+/**/ void Update_Data(string username, Node **head, Node **tail);
 /**/ 
 // --------- Admin ------- //
 /**/ void Admin_Acc(Node **head, Node **tail);  //<--------- Hapus Nanti
@@ -200,7 +206,7 @@ bool User_Menu(){
 	case '2':
 		break;
 	case '3':
-		updateData(active_user, &HEADAcc, &TAILAcc);
+		Update_Data(active_user, &HEADAcc, &TAILAcc);
 		break;
 	case '4':
 		active_user = "";
@@ -598,60 +604,88 @@ void Daftar_Kategori(){
 		 << endl;
 }
 
-void updateData(string username, Node **head, Node **tail){
+void Update_Data(string username, Node **head, Node **tail){
 	system("cls");
 	string email, alamat, password, nama;
-	int no_hp;
+	long long int no_hp;
 
 	cout << " =========================================================\
            \n                          FORM USER                       \
     	   \n =========================================================\n\n \
     	   \n              UPDATE DATA AKUN CUSTOMER LAUNDRY           \
-    	   \n ---------------------------------------------------------"
+    	   \n ---------------------------------------------------------\
+    	   \n\
+    	   \n           (Ketik '0' untuk menggunakan data lama)"
 		 << endl;
-
-	cout << " Nama Customer\t: ";
-	fflush(stdin);
-	getline(cin, nama);
-
-	cout << " No Handphone\t: +62";
-	cin >> no_hp;
-
-	cout << " Alamat Email: ";
-	fflush(stdin);
-	getline(cin, email);
-
-	cout << " Alamat Rumah: ";
-	fflush(stdin);
-	getline(cin, alamat);
-
-	cout << " Password: ";
-	fflush(stdin);
-	getline(cin, password);
-
-	cout << " ---------------------------------------------------------" << endl;
 
 	// Tambahkan Node Bantu
 	Node *temp = *head;
 
+	// Transvers
 	while(temp != NULL){
 		
-		if(temp->data.nama == username)
-		{
-			temp->akun.nama = nama;
-			temp->akun.no_hp = no_hp;
-			temp->akun.email = email;
-			temp->akun.alamat = alamat;
-			temp->akun.password = password;
-
-			cout << endl;
-			cout << "  =======================================================" << endl;
-			cout << " |         Data Akun Telah Berhasil Diupdate !           |" << endl;
-			cout << "  =======================================================" << endl;
-			system("pause");
+		if(temp->akun.username == username){
 			break;
 		}
 
 		temp = temp->next;
 	}
+
+
+	cout << " Nama Customer Lama\t: " << temp->akun.nama << endl;
+	cout << " Nama Customer Baru\t: ";
+	fflush(stdin);
+	getline(cin, nama);
+	if(nama == "0"){
+		nama = temp->akun.nama;
+	}
+
+
+	cout << " No Handphone Lama\t: +62" << temp->akun.no_hp << endl;
+	cout << " No Handphone Baru\t: +62";
+	cin >> no_hp;
+	if(no_hp == 0){
+		no_hp = temp->akun.no_hp;
+	}
+
+
+	cout << " Alamat Email Lama\t: " << temp->akun.email << endl;
+	cout << " Alamat Email Baru\t: ";
+	fflush(stdin);
+	getline(cin, email);
+	if(email == "0"){
+		email = temp->akun.email;
+	}
+
+
+	cout << " Alamat Rumah Lama\t: " << temp->akun.alamat << endl;
+	cout << " Alamat Rumah Baru\t: ";
+	fflush(stdin);
+	getline(cin, alamat);
+	if(alamat == "0"){
+		alamat = temp->akun.alamat;
+	}
+
+
+	cout << " Password Lama\t: ------\n";
+	cout << " Password Baru\t: ";
+	fflush(stdin);
+	getline(cin, password);
+	if(password == "0"){
+		password = temp->akun.password;
+	}
+
+	cout << " ---------------------------------------------------------" << endl;
+	
+	temp->akun.nama = nama;
+	temp->akun.no_hp = no_hp;
+	temp->akun.email = email;
+	temp->akun.alamat = alamat;
+	temp->akun.password = password;
+
+	cout << endl;
+	cout << "  =======================================================" << endl;
+	cout << " |         Data Akun Telah Berhasil Diupdate !           |" << endl;
+	cout << "  =======================================================" << endl;
+	system("pause");
 }
