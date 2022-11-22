@@ -56,8 +56,8 @@ using namespace std;
 /**/ struct Node *HEADLOG = NULL;
 /**/ struct Node *TAILLOG = NULL;
 /**/
-/**/ struct Node *HEADAcc = NULL;
-/**/ struct Node *TAILAcc = NULL;
+/**/ struct Node *HEADACC = NULL;
+/**/ struct Node *TAILACC = NULL;
 /**/
 /**/ struct Node *posisi;
 /**/
@@ -80,35 +80,41 @@ using namespace std;
 /**/ bool Admin_Menu();
 /**/ bool User_Menu();
 /**/
+/**/ 
 // --------- Misc ------- //
 /**/ void Version(); //<----------- Hapus Nanti
-/**/ void Show(Node *head, Node *tail, char jalur);
+/**/ void Show(Node *head, Node *tail, char asc);
 /**/ int  lenLL(Node *head);
-/**/ void To_Riwayat(Node **head, Node **tail, Node **headlog, Node **taillog);
 /**/ long long int gettime();
 /**/
+/**/ 
 // --------- Utama ------- //
 /**/ void Register(Node **head, Node **tail);
 /**/ void Login(Node *head, Node *tail);
 /**/
+/**/ 
 // --------- User -------- //
-/**/ void Add_Last(Node **head, Node **tail);
+/**/ void Add_Last(Node **head, Node **tail, Node *headlog);
 /**/ void Update_Data(string username, Node **head, Node **tail);
+/**/ 
 /**/ 
 // --------- Admin ------- //
 /**/ void Admin_Acc(Node **head, Node **tail);  //<--------- Hapus Nanti
+/**/ void To_Riwayat(Node **head, Node **tail, Node **headlog, Node **taillog);
 /**/ void Delete_First(Node **head, Node **tail);
 /**/
+/**/ 
 // --------- Others ------- //
 /**/ void Daftar_Kategori();
 /**/
+/**/ 
 
 
 
 int main()
 {
 	system("color 70");
-	Admin_Acc(&HEADAcc, &TAILAcc);
+	Admin_Acc(&HEADACC, &TAILACC);
 
 	while (First_Menu() == true){}
 
@@ -130,10 +136,10 @@ bool First_Menu(){
 	switch (getch())
 	{
 	case '1':
-		Login(HEADAcc, TAILAcc);
+		Login(HEADACC, TAILACC);
 		break;
 	case '2':
-		Register(&HEADAcc, &TAILAcc);
+		Register(&HEADACC, &TAILACC);
 		break;
 	case '3':
 		exit(0);
@@ -167,13 +173,13 @@ bool Admin_Menu(){
 	case '1':
 		break;
 	case '2':
-		Show(HEAD, TAIL, '1');
+		Show(HEAD, TAIL, true);
 		break;
 	case '3':
-		Delete_First(&HEAD, &TAIL);
+		To_Riwayat(&HEAD, &TAIL, &HEADLOG, &TAILLOG);
 		break;
 	case '4':
-		Show(HEADLOG, TAILLOG, '0');
+		Show(HEADLOG, TAILLOG, true);
 		break;
 	case '5':
 		break;
@@ -201,12 +207,12 @@ bool User_Menu(){
 	switch (getch())
 	{
 	case '1':
-		Add_Last(&HEAD, &TAIL);
+		Add_Last(&HEAD, &TAIL, HEADACC);
 		break;
 	case '2':
 		break;
 	case '3':
-		Update_Data(active_user, &HEADAcc, &TAILAcc);
+		Update_Data(active_user, &HEADACC, &TAILACC);
 		break;
 	case '4':
 		active_user = "";
@@ -228,17 +234,20 @@ void Version(){
 	cout << "\n\n Menu ini akan dihapus nanti,\
 			 \n Menu dibuat untuk memberi keterangan guna\
 			 \n mengetahui perkembangan program.\n\
-			 \n > Alur Menu [SELESAI]\
-			 \n > Struct Laundry [SELESAI]\
-			 \n > Struct Riwayat Laundry\
-			 \n > Struct Keanggotaan (Admin/User)\
-			 \n > Add Last Laundry\
-			 \n > Delete First Laundry\
-			 \n > Add Last Riwayat Laundry\
+			 \n > Alur Menu                       [SELESAI]\
+			 \n > Struct Laundry                  [SELESAI]\
+			 \n > Struct Riwayat Laundry          [SELESAI]\
+			 \n > Struct Keanggotaan (Admin/User) [SELESAI]\
+			 \n > Add Last Laundry                [SELESAI]\
+			 \n > Delete First Laundry            [SELESAI]\
+			 \n > Add Last Riwayat Laundry        [SELESAI]\
+			 \n > Lihat Pesanan ASC/DESC          [SELESAI]\
+			 \n ---> Menu pilihan ASC / DESC belum\
+			 \n ---> Menu lihat pesanan pengguna belum\
 			 \n > Sorting\
 			 \n > Searching\
 			 \n > File Eksternal\
-			 \n > Login Session\
+			 \n > Login Session                   [SELESAI]\
 			 \n > Perindah Tampilan";
 	getch();
 }
@@ -322,31 +331,59 @@ void Login(Node *head, Node *tail){
 
 // ==================== USER ===================== //
 
-void Add_Last(Node **head, Node **tail){
+void Add_Last(Node **head, Node **tail, Node *headacc){
 	system("cls");
 	char kategori;
 	string nama;
 	string alamat;
-	int intkategori, harga, nomor;
+	int intkategori, harga;
+	long long int nomor;
 	double berat;
+	
+	// Transvers
+	Node *temp = headacc;
+	
+	while(temp != NULL){
+		
+		if(temp->akun.username == active_user){
+			break;
+		}
+
+		temp = temp->next;
+	}
+
 
 	cout << " =========================================================\
            \n                        FORM PESANAN                      \
     	   \n =========================================================\n\n \
     	   \n                     DATA CUSTOMER LAUNDRY                \
-    	   \n ---------------------------------------------------------"
+    	   \n ---------------------------------------------------------\
+    	   \n\
+    	   \n           (Ketik '0' untuk menggunakan data akun)"
 		 << endl;
 
 	cout << " Nama Customer\t: ";
 	fflush(stdin);
 	getline(cin, nama);
+	if(nama == "0"){
+		nama = temp->akun.nama;
+		cout << "\t ---> " << nama << endl;
+	}
 
 	cout << " No Handphone\t: +62";
 	cin >> nomor;
+	if(nomor == 0){
+		nomor = temp->akun.no_hp;
+		cout << "\t ---> +62" << nomor << endl;
+	}
 
 	cout << " Alamat Customer: ";
 	fflush(stdin);
 	getline(cin, alamat);
+	if(alamat == "0"){
+		alamat = temp->akun.alamat;
+		cout << "\t ---> " << alamat << endl;
+	}
 
 	Daftar_Kategori();
 
@@ -385,7 +422,7 @@ void Add_Last(Node **head, Node **tail){
 	}
 	cout << endl;
 	cout << "  =======================================================" << endl;
-	cout << " |        Data Terakhir Telah Berhasil Ditambahkan       |" << endl;
+	cout << " |           Pesanan Telah Berhasil Ditambahkan          |" << endl;
 	cout << "  =======================================================" << endl;
 	system("pause");
 }
@@ -409,19 +446,19 @@ void Register(Node **head, Node **tail){
 	cout << " No Handphone\t: +62";
 	cin >> no_hp;
 
-	cout << " Alamat Email: ";
+	cout << " Alamat Email\t: ";
 	fflush(stdin);
 	getline(cin, email);
 
-	cout << " Alamat Rumah: ";
+	cout << " Alamat Rumah\t: ";
 	fflush(stdin);
 	getline(cin, alamat);
 
-	cout << " Username : ";
+	cout << " Username\t: ";
 	fflush(stdin);
 	getline(cin, username);
 
-	cout << " Password: ";
+	cout << " Password\t: ";
 	fflush(stdin);
 	getline(cin, password);
 
@@ -474,7 +511,7 @@ void Admin_Acc(Node **head, Node **tail){   // Hapus Nanti
 }
 
 
-void Show(Node *head, Node *tail, char jalur){
+void Show(Node *head, Node *tail, char asc){
 
 	system("CLS");
 
@@ -490,7 +527,7 @@ void Show(Node *head, Node *tail, char jalur){
 		int indeks;
 
 		// Ascending
-		if (jalur == '0'){
+		if (asc == true){
 			indeks = 1;
 			temp = head;
 		}
@@ -512,7 +549,7 @@ void Show(Node *head, Node *tail, char jalur){
 
 			// Traversal
 			// Ascending
-			if (jalur == '0'){
+			if (asc == true){
 				temp = temp->next;
 				indeks++;
 			}
@@ -530,19 +567,22 @@ void Show(Node *head, Node *tail, char jalur){
 
 
 void To_Riwayat(Node **head, Node **tail, Node **headlog, Node **taillog){
+	if (*head == NULL){
+		return;
+	}
 	Node *newNode = new Node;
 
-	newNode->data.nama     = (*head)->data.nama;
-	newNode->data.nomor_hp = (*head)->data.nomor_hp;
-	newNode->data.kategori = (*head)->data.kategori;
-	newNode->data.berat    = (*head)->data.berat;
-	newNode->data.harga    = (*head)->data.harga;
+	newNode->log.nama     = (*head)->data.nama;
+	newNode->log.nomor_hp = (*head)->data.nomor_hp;
+	newNode->log.kategori = (*head)->data.kategori;
+	newNode->log.berat    = (*head)->data.berat;
+	newNode->log.harga    = (*head)->data.harga;
+	newNode->log.tanggal  = gettime();
 	newNode->prev = *taillog;
 	newNode->next = NULL;
 
 	if (*headlog == NULL && *taillog == NULL)
 	{
-		*headlog = newNode;
 		*taillog = newNode;
 	}
 	else
@@ -550,6 +590,10 @@ void To_Riwayat(Node **head, Node **tail, Node **headlog, Node **taillog){
 		(*taillog)->next = newNode;
 		*taillog = newNode;
 	}
+	*headlog = newNode;
+	
+	Delete_First(&(*head), &(*tail));
+	
 }
 
 void Delete_First(Node **head, Node **tail){
