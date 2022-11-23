@@ -134,22 +134,21 @@ bool First_Menu(){
 		     \n  --+ 3. Exit\
 		     \n  --+ 4. Versi Aplikasi";
 		     
-	switch (getch())
-	{
-	case '1':
-		Login(HEADACC, TAILACC);
-		break;
-	case '2':
-		Register(&HEADACC, &TAILACC);
-		break;
-	case '3':
-		exit(0);
-		break;
-	case '4':
-		Version();
-		break;
-	default:
-		break;
+	switch (getch()){
+		case '1':
+			Login(HEADACC, TAILACC);
+			break;
+		case '2':
+			Register(&HEADACC, &TAILACC);
+			break;
+		case '3':
+			exit(0);
+			break;
+		case '4':
+			Version();
+			break;
+		default:
+			break;
 	};
 
 	system("CLS");
@@ -169,28 +168,27 @@ bool Admin_Menu(){
 		     \n  --+ 5. Update Data Akun\
 			 \n  --+ 6. Keluar";
 
-	switch (getch())
-	{
-	case '1':
-		Add_Last(&HEAD, &TAIL, HEADACC);
-		break;
-	case '2':
-		Show(HEAD, TAIL, true, false);
-		break;
-	case '3':
-		To_Riwayat(&HEAD, &TAIL, &HEADLOG, &TAILLOG);
-		break;
-	case '4':
-		Show(HEADLOG, TAILLOG, true, true);
-		break;
-	case '5':
-		break;
-	case '6':
-		active_user = "";
-		return false;
-		break;
-	default:
-		break;
+	switch (getch()){
+		case '1':
+			Add_Last(&HEAD, &TAIL, HEADACC);
+			break;
+		case '2':
+			Show(HEAD, TAIL, true, false);
+			break;
+		case '3':
+			To_Riwayat(&HEAD, &TAIL, &HEADLOG, &TAILLOG);
+			break;
+		case '4':
+			Show(HEADLOG, TAILLOG, true, true);
+			break;
+		case '5':
+			break;
+		case '6':
+			active_user = "";
+			return false;
+			break;
+		default:
+			break;
 	}
 
 	return true;
@@ -206,22 +204,21 @@ bool User_Menu(){
 		     \n  --+ 3. Update Data Akun\
 			 \n  --+ 4. Keluar";
 
-	switch (getch())
-	{
-	case '1':
-		Add_Last(&HEAD, &TAIL, HEADACC);
-		break;
-	case '2':
-		break;
-	case '3':
-		Update_Data(active_user, &HEADACC, &TAILACC);
-		break;
-	case '4':
-		active_user = "";
-		return false;
-		break;
-	default:
-		break;
+	switch (getch()){
+		case '1':
+			Add_Last(&HEAD, &TAIL, HEADACC);
+			break;
+		case '2':
+			break;
+		case '3':
+			Update_Data(active_user, &HEADACC, &TAILACC);
+			break;
+		case '4':
+			active_user = "";
+			return false;
+			break;
+		default:
+			break;
 	}
 
 	return true;
@@ -254,13 +251,11 @@ void Version(){
 	getch();
 }
 
-int lenLL(Node *head)
-{
+int lenLL(Node *head){
 	int i = 0;
 	Node *temp = head;
 
-	while (temp != NULL)
-	{
+	while (temp != NULL){
 		i++;
 		temp = temp->next;
 	}
@@ -273,12 +268,12 @@ long long int gettime(){
     tm* now = localtime(&t);
     
 	long long int Year = (now->tm_year + 1900) * 10000000000; 
-    long long int Mon =  (now->tm_mon + 1) * 100000000;
-    long long int Day =  now->tm_mday * 1000000;
+    long long int Mon  = (now->tm_mon + 1) * 100000000;
+    long long int Day  = now->tm_mday * 1000000;
     
     long long int Hour = now->tm_hour * 10000;
-    long long int Min =  now->tm_min * 100;
-    long long int Sec =  now->tm_sec;
+    long long int Min  = now->tm_min * 100;
+    long long int Sec  = now->tm_sec;
     
     return Year + Mon + Day + Hour + Min + Sec;
 }
@@ -306,25 +301,32 @@ void Login(Node *head, Node *tail){
 		temp = temp->next;
 	}
 	
+	// Cek Kecocokan Username dengan Password
 	if(temp->akun.username == USN){
 		if(temp->akun.password == PASS){
 			logged = true;
 		}
 	}
 	
-
+	
+	// Jikalau Cocoque
 	if (logged){
 		active_user = temp->akun.username;
 		
+		// Jika Admin
 		if (USN == "Admind"){
 			while(Admin_Menu() == true){};
 		}
+		
+		// Jika User
 		else{
 			while (User_Menu() == true){};
 		}
 	}
+	
+	// Jikalau Tidak Cocoque
 	else{
-		cout << " Salah gan\n";
+		cout << " Email atau Password\n";
 		system("pause");
 	}
 }
@@ -402,7 +404,7 @@ void Add_Last(Node **head, Node **tail, Node *headacc){
 	harga = berat * hrg[intkategori - 1];
 	cout << harga;
 
-	// Tambahkan Data ke Struct
+	// Tambahkan Data ke Struct (Add Last) 
 	Node *newNode = new Node;
 
 	newNode->data.nama = nama;
@@ -414,13 +416,14 @@ void Add_Last(Node **head, Node **tail, Node *headacc){
 	newNode->prev = *tail;
 	newNode->next = NULL;
 
-	if (*head == NULL && *tail == NULL)
-	{
+	// Jikalau LL Kosong
+	if (*head == NULL && *tail == NULL){
 		*head = newNode;
 		*tail = newNode;
 	}
-	else
-	{
+	
+	// Jikalau LL Tidak Kosong
+	else{
 		(*tail)->next = newNode;
 		*tail = newNode;
 	}
