@@ -87,11 +87,11 @@ using namespace std;
 /**/ void Show(Node *head, Node *tail, bool asc, bool riwayat);
 /**/ int  lenLL(Node *head);
 /**/ long long int gettime();
-/**/ void search(Node **head, Node **tail, bool laundry, bool riwayat);
-/**/ void quickSort(struct Node **headRef);
+/**/ void quickSort(struct Node **headRef, bool username);
 /**/ struct Node *getTail(struct Node *cur);
-/**/ struct Node *partition(struct Node *head, struct Node *end, struct Node **newHead, struct Node **newEnd);
-/**/ struct Node *quickSortRecur(struct Node *head, struct Node *end);
+/**/ struct Node *partition(struct Node *head, struct Node *end, struct Node **newHead, struct Node **newEnd, bool username);
+/**/ struct Node *quickSortRecur(struct Node *head, struct Node *end, bool username);
+/**/ int fibonacciSearch(Node *node, string x, int n);
 /**/
 /**/
 // --------- Utama ------- //
@@ -178,9 +178,11 @@ bool Admin_Menu(){
 			Add_Last(&HEAD, &TAIL, HEADACC);
 			break;
 		case '2':
+			quickSort(&HEAD, true);
 			Show(HEAD, TAIL, true, false);
 			break;
 		case '3':
+			quickSort(&HEAD, false);
 			To_Riwayat(&HEAD, &TAIL, &HEADLOG, &TAILLOG);
 			break;
 		case '4':
@@ -773,18 +775,34 @@ struct Node *partition(struct Node *head, struct Node *end, struct Node **newHea
     struct Node *prev = NULL, *cur = head, *tail = pivot;
     
     while (cur != pivot){
-        if (cur->data.nim < pivot->data.nim){
-            if ((*newHead) == NULL) (*newHead) = cur;
-            prev = cur;
-            cur = cur->next;
-        }else{
-            if (prev) prev->next = cur->next;
-            struct Node *tmp = cur->next;
-            cur->next = NULL;
-            tail->next = cur;
-            tail = cur;
-            cur = tmp;
-        }
+		if(username == true){
+			if (cur->data.username < pivot->data.username){
+				if ((*newHead) == NULL) (*newHead) = cur;
+				prev = cur;
+				cur = cur->next;
+			}else{
+				if (prev) prev->next = cur->next;
+				struct Node *tmp = cur->next;
+				cur->next = NULL;
+				tail->next = cur;
+				tail = cur;
+				cur = tmp;
+			}
+		}
+		else{
+			if (cur->log.tanggal < pivot->log.tanggal){
+				if ((*newHead) == NULL) (*newHead) = cur;
+				prev = cur;
+				cur = cur->next;
+			}else{
+				if (prev) prev->next = cur->next;
+				struct Node *tmp = cur->next;
+				cur->next = NULL;
+				tail->next = cur;
+				tail = cur;
+				cur = tmp;
+			}	
+		}
     }
     if ((*newHead) == NULL) (*newHead) = pivot;
     (*newEnd) = tail;
@@ -794,29 +812,92 @@ struct Node *partition(struct Node *head, struct Node *end, struct Node **newHea
 struct Node *quickSortRecur(struct Node *head, struct Node *end, bool username){
     if (!head || head == end) return head;
     Node *newHead = NULL, *newEnd = NULL;
-    struct Node* pivot = partition(head, end, &newHead, &newEnd);
-    if (newHead != pivot){
-        struct Node *tmp = newHead;
-        while (tmp->next != pivot) tmp = tmp->next;
-        tmp->next = NULL;
-        newHead = quickSortRecur(newHead, tmp);
-        tmp = getTail(newHead);
-        tmp->next = pivot;
-    }
-    pivot->next = quickSortRecur(pivot->next, newEnd);
+
+	if(username == true) {
+		struct Node* pivot = partition(head, end, &newHead, &newEnd, true);
+		if (newHead != pivot) {
+			struct Node *tmp = newHead;
+			while (tmp->next != pivot) tmp = tmp->next;
+			tmp->next = NULL;
+			newHead = quickSortRecur(newHead, tmp, true);
+			tmp = getTail(newHead);
+			tmp->next = pivot;
+			pivot->next = quickSortRecur(pivot->next, newEnd, true);
+		}
+	}
+    else {
+		struct Node* pivot = partition(head, end, &newHead, &newEnd, false);
+		if (newHead != pivot){
+			struct Node *tmp = newHead;
+			while (tmp->next != pivot) tmp = tmp->next;
+			tmp->next = NULL;
+			newHead = quickSortRecur(newHead, tmp, false);
+			tmp = getTail(newHead);
+			tmp->next = pivot;
+			pivot->next = quickSortRecur(pivot->next, newEnd, false);
+		}
+	}
+	
     return newHead;
 }
  
 void quickSort(struct Node **headRef, bool username){
-	if(username = true){
-    	(*headRef) = quickSortRecur(*headRef, getTail(*headRef));
+	if(username == true){
+    	(*headRef) = quickSortRecur(*headRef, getTail(*headRef), true);
 	}
 	else{
-		(*headRef) = quickSortRecur(*headRef, getTail(*headRef));
+		(*headRef) = quickSortRecur(*headRef, getTail(*headRef), false);
 	}
     return;
 }
 
-void search(Node **head, Node **tail, bool laundry, bool riwayat){
+//Fibonacci Search algorithm
+int fibonacciSearch(Node *node, string x, int n)
+{
+    int F0 = 0;
+    int F1 = 1;
+    int F = F0 + F1;
+    while (F < n)
+    {
+        F0 = F1;
+        F1 = F;
+        F = F0 + F1;
+    }
+    int offset = -1;
+    while (F > 1)
+    {
+        // Inisiasi awal
+        Node *head = node;
+        int i = min(offset + F0, n - 1);
+        for (int trv = 0; head->next != NULL && trv < i; trv++)
+        {
+            head = head->next;
+        }
+        if (head->data.nama < x)
+        {
+            F = F1;
+            F1 = F0;
+            F0 = F - F1;
+            offset = i;
+        }
+        else if (head->data.nama > x)
+        {
+            F = F0;
+            F1 = F1 - F0;
+            F0 = F - F1;
+        }
+        else
+        {
+            return i;
+        }
+    }
 
+    Node *head2 = node;
+    for (int trv = 0; head2->next != NULL && trv < offset + 1; trv++)
+    {
+        head2 = head2->next;
+    }
+    if (F1 && head2->data.nama == x)
+        return offset + 1;
+    return -1;
 }
