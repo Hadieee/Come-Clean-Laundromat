@@ -22,7 +22,7 @@ int main(){
 		masuk(&usn, &pass, &state);
 	}
 	
-	cout << "end";
+	cout << "\nend";
 	
 	return 0;
 }

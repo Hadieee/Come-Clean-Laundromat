@@ -6,9 +6,6 @@
 #include <time.h>
 using namespace std;
 
-#define Enter 13
-#define Backspace 8
-
 
 ////   D E K L A R A S I   ////
 /**/ struct Data_Laundry{
@@ -22,17 +19,19 @@ using namespace std;
 /**/	string username;
 /**/ };
 ////
+////
 /**/ struct Data_Riwayat{
 /**/ 	string nama;
 /**/ 	long long int nomor_hp;
 /**/	string alamat;
-/**/ 	long long int tanggal;
 /**/ 	char kategori;
 /**/ 	double berat;
 /**/ 	int harga;
 /**/ 	int total;
 /**/	string username;
+/**/ 	long long int tanggal;
 /**/ };
+////
 ////
 /**/ struct Data_Akun{
 /**/ 	string username;
@@ -85,7 +84,7 @@ using namespace std;
 /**/ 
 // --------- Misc ------- //
 /**/ void Version(); //<----------- Hapus Nanti
-/**/ void Show(Node *head, Node *tail, char asc);
+/**/ void Show(Node *head, Node *tail, bool asc, bool riwayat);
 /**/ int  lenLL(Node *head);
 /**/ long long int gettime();
 /**/
@@ -173,15 +172,16 @@ bool Admin_Menu(){
 	switch (getch())
 	{
 	case '1':
+		Add_Last(&HEAD, &TAIL, HEADACC);
 		break;
 	case '2':
-		Show(HEAD, TAIL, true);
+		Show(HEAD, TAIL, true, false);
 		break;
 	case '3':
 		To_Riwayat(&HEAD, &TAIL, &HEADLOG, &TAILLOG);
 		break;
 	case '4':
-		Show(HEADLOG, TAILLOG, true);
+		Show(HEADLOG, TAILLOG, true, true);
 		break;
 	case '5':
 		break;
@@ -269,7 +269,7 @@ int lenLL(Node *head)
 
 
 long long int gettime(){
-    time_t t = time(0);   // get time now
+    time_t t = time(0);
     tm* now = localtime(&t);
     
 	long long int Year = (now->tm_year + 1900) * 10000000000; 
@@ -291,10 +291,13 @@ void Login(Node *head, Node *tail){
 	system("CLS");
 
 	cout << "\n Username\t: ";
-	cin >> USN;
+	fflush(stdin);
+	getline(cin, USN);
 
 	cout << " Password\t: ";
-	cin >> PASS;
+	
+	fflush(stdin);
+	getline(cin, PASS);
 	
 	// traversal
 	Node *temp = head;
@@ -311,8 +314,6 @@ void Login(Node *head, Node *tail){
 	
 
 	if (logged){
-		cout << " Bener gan";
-		
 		active_user = temp->akun.username;
 		
 		if (USN == "Admind"){
@@ -323,7 +324,7 @@ void Login(Node *head, Node *tail){
 		}
 	}
 	else{
-		cout << " Salah gan";
+		cout << " Salah gan\n";
 		system("pause");
 	}
 }
@@ -514,7 +515,7 @@ void Admin_Acc(Node **head, Node **tail){   // Hapus Nanti
 }
 
 
-void Show(Node *head, Node *tail, char asc){
+void Show(Node *head, Node *tail, bool asc, bool riwayat){
 
 	system("CLS");
 
@@ -542,13 +543,27 @@ void Show(Node *head, Node *tail, char asc){
 		}
 
 		while (temp != NULL){
-
-			cout << " [" << indeks << "]" << endl;
-			cout << " Nama Customer\t: "  << temp->data.nama << endl;
-			cout << " No Handphone\t: "   << temp->data.nomor_hp << endl;
-			cout << " Jenis Cucian\t: "   << temp->data.kategori << endl;
-			cout << " Berat Cucian\t: "   << temp->data.berat << endl;
-			cout << " Harga Cucian\t: "   << temp->data.harga << endl;
+			
+			if(riwayat == false){
+			
+				cout << " [" << indeks << "]" << endl;
+				cout << " Nama Customer\t: "  << temp->data.nama << endl;
+				cout << " No Handphone\t: "   << temp->data.nomor_hp << endl;
+				cout << " Jenis Cucian\t: "   << temp->data.kategori << endl;
+				cout << " Berat Cucian\t: "   << temp->data.berat << endl;
+				cout << " Harga Cucian\t: "   << temp->data.harga << endl;
+				
+			} else{
+				
+				cout << " [" << indeks << "]" << endl;
+				cout << " Nama Customer\t: "  << temp->log.nama << endl;
+				cout << " No Handphone\t: "   << temp->log.nomor_hp << endl;
+				cout << " Jenis Cucian\t: "   << temp->log.kategori << endl;
+				cout << " Berat Cucian\t: "   << temp->log.berat << endl;
+				cout << " Harga Cucian\t: "   << temp->log.harga << endl;
+				cout << " Tanggal Selesai\t: "   << temp->log.tanggal << endl;
+				
+			}
 
 			// Traversal
 			// Ascending
@@ -582,21 +597,22 @@ void To_Riwayat(Node **head, Node **tail, Node **headlog, Node **taillog){
 	newNode->log.harga    = (*head)->data.harga;
 	newNode->log.username = (*head)->data.username;
 	newNode->log.tanggal  = gettime();
-	newNode->prev = *taillog;
+	newNode->prev = NULL;
 	newNode->next = NULL;
+	
+	system("pause");
 
-	if (*headlog == NULL && *taillog == NULL)
-	{
+	if (*headlog == NULL && *taillog == NULL){
 		*taillog = newNode;
 		*headlog = newNode;
 	}
-	else
-	{
+	else{
+		newNode->prev = *taillog;
 		(*taillog)->next = newNode;
 		*taillog = newNode;
 	}
 	
-	Delete_First(&(*head), &(*tail));	
+	Delete_First(&(*head), &(*tail));
 }
 
 void Delete_First(Node **head, Node **tail){
@@ -612,7 +628,7 @@ void Delete_First(Node **head, Node **tail){
 		*head = NULL;
 		*tail = NULL;
 		delete del;
-		cout << "  =======================================================" << endl;
+		cout << "\n  =======================================================" << endl;
 		cout << " |              Data Telah Berhasil Dihapus              |" << endl;
 		cout << "  =======================================================" << endl;
 		system("pause");
