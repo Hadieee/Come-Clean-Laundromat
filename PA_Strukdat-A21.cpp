@@ -87,8 +87,13 @@ using namespace std;
 /**/ void Show(Node *head, Node *tail, bool asc, bool riwayat);
 /**/ int  lenLL(Node *head);
 /**/ long long int gettime();
+/**/ void search(Node **head, Node **tail, bool laundry, bool riwayat);
+/**/ void quickSort(struct Node **headRef);
+/**/ struct Node *getTail(struct Node *cur);
+/**/ struct Node *partition(struct Node *head, struct Node *end, struct Node **newHead, struct Node **newEnd);
+/**/ struct Node *quickSortRecur(struct Node *head, struct Node *end);
 /**/
-/**/ 
+/**/
 // --------- Utama ------- //
 /**/ void Register(Node **head, Node **tail);
 /**/ void Login(Node *head, Node *tail);
@@ -753,4 +758,65 @@ void Update_Data(string username, Node **head, Node **tail){
 	cout << " |          Data Akun Telah Berhasil Diupdate!           |" << endl;
 	cout << "  =======================================================" << endl;
 	system("pause");
+}
+
+// ===========================================================
+// ||                      QUICK SORT 						||
+// ===========================================================
+struct Node *getTail(struct Node *cur){
+    while (cur != NULL && cur->next != NULL) cur = cur->next;
+    return cur;
+}
+ 
+struct Node *partition(struct Node *head, struct Node *end, struct Node **newHead, struct Node **newEnd, bool username){
+    struct Node *pivot = end;
+    struct Node *prev = NULL, *cur = head, *tail = pivot;
+    
+    while (cur != pivot){
+        if (cur->data.nim < pivot->data.nim){
+            if ((*newHead) == NULL) (*newHead) = cur;
+            prev = cur;
+            cur = cur->next;
+        }else{
+            if (prev) prev->next = cur->next;
+            struct Node *tmp = cur->next;
+            cur->next = NULL;
+            tail->next = cur;
+            tail = cur;
+            cur = tmp;
+        }
+    }
+    if ((*newHead) == NULL) (*newHead) = pivot;
+    (*newEnd) = tail;
+    return pivot;
+}
+ 
+struct Node *quickSortRecur(struct Node *head, struct Node *end, bool username){
+    if (!head || head == end) return head;
+    Node *newHead = NULL, *newEnd = NULL;
+    struct Node* pivot = partition(head, end, &newHead, &newEnd);
+    if (newHead != pivot){
+        struct Node *tmp = newHead;
+        while (tmp->next != pivot) tmp = tmp->next;
+        tmp->next = NULL;
+        newHead = quickSortRecur(newHead, tmp);
+        tmp = getTail(newHead);
+        tmp->next = pivot;
+    }
+    pivot->next = quickSortRecur(pivot->next, newEnd);
+    return newHead;
+}
+ 
+void quickSort(struct Node **headRef, bool username){
+	if(username = true){
+    	(*headRef) = quickSortRecur(*headRef, getTail(*headRef));
+	}
+	else{
+		(*headRef) = quickSortRecur(*headRef, getTail(*headRef));
+	}
+    return;
+}
+
+void search(Node **head, Node **tail, bool laundry, bool riwayat){
+
 }
