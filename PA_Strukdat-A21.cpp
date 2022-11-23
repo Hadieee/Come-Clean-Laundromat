@@ -250,7 +250,7 @@ void Version(){
 			 \n > Lihat Pesanan ASC/DESC          [SELESAI]\
 			 \n ---> Menu pilihan ASC / DESC belum\
 			 \n ---> Menu lihat pesanan pengguna belum\
-			 \n > Sorting\
+			 \n > Sorting						  [HAMPIR SELEAI]\
 			 \n > Searching\
 			 \n > File Eksternal\
 			 \n > Login Session                   [SELESAI]\
