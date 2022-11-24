@@ -96,7 +96,7 @@ using namespace std;
 /**/
 /**/
 // --------- Utama ------- //
-/**/ void Register(Node **head, Node **tail);
+/**/ void Register(Node *head, Node **headacc, Node **tailacc);
 /**/ void Login(Node *head, Node *tail);
 /**/
 /**/ 
@@ -145,7 +145,7 @@ bool First_Menu(){
 			Login(HEADACC, TAILACC);
 			break;
 		case '2':
-			Register(&HEADACC, &TAILACC);
+			Register(HEADACC, &HEADACC, &TAILACC);
 			break;
 		case '3':
 			exit(0);
@@ -379,7 +379,8 @@ void Add_Last(Node **head, Node **tail, Node *headacc){
     	   \n                     DATA CUSTOMER LAUNDRY                \
     	   \n ---------------------------------------------------------\
     	   \n\
-    	   \n           (Ketik '0' untuk menggunakan data akun)"
+    	   \n           (Ketik '0' untuk menggunakan data akun)\
+    	   \n                  (Ketik '9' untuk kembali)"
 		 << endl;
 
 	cout << " Nama Customer\t: ";
@@ -389,12 +390,18 @@ void Add_Last(Node **head, Node **tail, Node *headacc){
 		nama = temp->akun.nama;
 		cout << "\t ---> " << nama << endl;
 	}
+	else if(nama == "9" || nama == ""){
+		return;
+	}
 
 	cout << " No Handphone\t: +62";
 	cin >> nomor;
 	if(nomor == 0){
 		nomor = temp->akun.no_hp;
 		cout << "\t ---> +62" << nomor << endl;
+	}
+	else if(nomor == 9){
+		return;
 	}
 
 	cout << " Alamat Customer: ";
@@ -404,12 +411,18 @@ void Add_Last(Node **head, Node **tail, Node *headacc){
 		alamat = temp->akun.alamat;
 		cout << "\t ---> " << alamat << endl;
 	}
+	else if(alamat == "9" || alamat == ""){
+		return;
+	}
 
 	Daftar_Kategori();
 
 	cout << " Masukkan kategori cucian Anda ->";
 	kategori = getche();
 	intkategori = (int)kategori - 48;
+	if(kategori == '\n'){
+		return;
+	}
 
 	fflush(stdin);
 	cout << "\n Berat Cucian (Kg):";
@@ -449,41 +462,75 @@ void Add_Last(Node **head, Node **tail, Node *headacc){
 	system("pause");
 }
 
-void Register(Node **head, Node **tail){
+void Register(Node *head, Node **headacc, Node **tailacc){
 	
-	system("cls");
 	string nama, email, alamat, username, password;
 	long long int no_hp;
-	cout << " =========================================================\
-           \n                        FORM REGISTRASI                   \
-    	   \n =========================================================\n\n \
-    	   \n                     DATA AKUN CUSTOMER LAUNDRY           \
-    	   \n ---------------------------------------------------------"
-		 << endl;
+	
+	quickSort(&(*headacc), true);
+	
+	while(true){
+		system("CLS");
+		cout << "\n =========================================================\
+	           \n                        FORM REGISTRASI                   \
+	    	   \n =========================================================\n \
+	    	   \n                     DATA AKUN CUSTOMER LAUNDRY           \
+	    	   \n ---------------------------------------------------------\
+	    	   \n\
+	    	   \n           (Ketik '0' untuk membatalkan registrasi)"
+			 << endl;
+	
+		cout << " Username\t: ";
+		fflush(stdin);
+		getline(cin, username);
+		
+		if (fibonacciSearch(head, username, lenLL(head)) != -1){
+	        cout << "    Username sudah ada\n";
+	        system("pause");
+		}
+		else if(username == "0" || username == ""){
+			return;
+		}
+		else{
+			break;
+		}
+	}
+
 
 	cout << " Nama Customer\t: ";
 	fflush(stdin);
 	getline(cin, nama);
+	if(nama == "0" || nama == ""){
+		return;
+	}
 
 	cout << " No Handphone\t: +62";
 	cin >> no_hp;
+	if(no_hp == 0){
+		return;
+	}
 
 	cout << " Alamat Email\t: ";
 	fflush(stdin);
 	getline(cin, email);
+	if(email == "0" || email == ""){
+		return;
+	}
 
 	cout << " Alamat Rumah\t: ";
 	fflush(stdin);
 	getline(cin, alamat);
-
-	cout << " Username\t: ";
-	fflush(stdin);
-	getline(cin, username);
+	if(alamat == "0" || alamat == ""){
+		return;
+	}
 
 	cout << " Password\t: ";
 	fflush(stdin);
 	getline(cin, password);
-
+	if(password == "0" || password == ""){
+		return;
+	}
+	
 	cout << " ---------------------------------------------------------" << endl;
 
 	// Tambahkan Data ke Struct
@@ -496,15 +543,15 @@ void Register(Node **head, Node **tail){
 	newNode->akun.username = username;
 	newNode->akun.password = password;
 
-	if (*head == NULL && *tail == NULL){
-		*head = newNode;
-		*tail = newNode;
+	if (*headacc == NULL && *tailacc == NULL){
+		*headacc = newNode;
+		*tailacc = newNode;
 	}
 	else{
-		(*head)->prev = newNode;
-		newNode->next = *head;
+		(*headacc)->prev = newNode;
+		newNode->next = *headacc;
 		newNode->prev = NULL;
-		*head = newNode;
+		*headacc = newNode;
 	}
 	cout << endl;
 	cout << " =======================================================" << endl;
@@ -602,6 +649,12 @@ void Show(Node *head, Node *tail, bool asc, bool riwayat, string specific){
 			
 				cout << "  ------------------------------------:" << endl;
 			
+			}
+			
+			if(indeks % 5 == 0){
+				cout << " Klik '0' untuk kembali,\
+						\n Klik lainnya untuk lanjut ke halaman berikutnya.";
+				if(getch() == '0'){return;}
 			}
 			
 
@@ -893,24 +946,27 @@ int fibonacciSearch(Node *node, string x, int n)
         F1 = F;
         F = F0 + F1;
     }
+
     int offset = -1;
+    
     while (F > 1)
     {
         // Inisiasi awal
         Node *head = node;
+        
         int i = min(offset + F0, n - 1);
         for (int trv = 0; head->next != NULL && trv < i; trv++)
         {
             head = head->next;
         }
-        if (head->data.nama < x)
+        if (head->akun.username < x)
         {
             F = F1;
             F1 = F0;
             F0 = F - F1;
             offset = i;
         }
-        else if (head->data.nama > x)
+        else if (head->akun.username > x)
         {
             F = F0;
             F1 = F1 - F0;
@@ -926,8 +982,8 @@ int fibonacciSearch(Node *node, string x, int n)
     for (int trv = 0; head2->next != NULL && trv < offset + 1; trv++)
     {
         head2 = head2->next;
-    }
-    if (F1 && head2->data.nama == x)
+	}
+    if (F1 && head2->akun.username == x)
         return offset + 1;
     return -1;
 }
