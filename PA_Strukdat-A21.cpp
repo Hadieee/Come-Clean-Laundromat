@@ -92,6 +92,7 @@ using namespace std;
 /**/ struct Node *partition(struct Node *head, struct Node *end, struct Node **newHead, struct Node **newEnd, bool username);
 /**/ struct Node *quickSortRecur(struct Node *head, struct Node *end, bool username);
 /**/ int fibonacciSearch(Node *node, string x, int n);
+/**/ void Search(Node **head, Node **tail);
 /**/
 /**/
 // --------- Utama ------- //
@@ -171,7 +172,8 @@ bool Admin_Menu(){
 			 \n  --+ 3. Hapus atau Selesaikan Pesanan\
 		     \n  --+ 4. Lihat Riwayat Pesanan\
 		     \n  --+ 5. Update Data Akun\
-			 \n  --+ 6. Keluar";
+			 \n  --+ 6. Search Data Akun\
+			 \n  --+ 7. Keluar";
 
 	switch (getch()){
 		case '1':
@@ -191,6 +193,9 @@ bool Admin_Menu(){
 		case '5':
 			break;
 		case '6':
+			Search(&HEAD, &TAIL);
+			break;
+		case '7':
 			active_user = "";
 			return false;
 			break;
@@ -900,4 +905,27 @@ int fibonacciSearch(Node *node, string x, int n)
     if (F1 && head2->data.nama == x)
         return offset + 1;
     return -1;
+}
+
+void Search(Node **head, Node **tail) {
+	quickSort(head, true);
+	system("cls");
+	string nama;
+	cout << " =========================================================\
+           \n                          SEARCH DATA                     \
+    	   \n =========================================================\n\
+    	   \n                 SEARCH NAMA COSTUMER LAUNDRY             \
+    	   \n ---------------------------------------------------------\n"
+		 << endl;
+
+	cout << "Masukan nama costumer yang ingin dicari : ";
+	getline(cin, nama); fflush(stdin);
+
+	    int ind = fibonacciSearch(*head, nama, lenLL(*head));
+    if (ind >= 0){
+        cout << "Data ditemukan pada index : " << ind;
+		getche();
+	}
+    else
+        cout << nama << " tidak ada dalam Linked List";
 }
