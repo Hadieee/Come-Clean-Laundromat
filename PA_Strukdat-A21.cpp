@@ -84,7 +84,7 @@ using namespace std;
 /**/ 
 // --------- Misc ------- //
 /**/ void Version(); //<----------- Hapus Nanti
-/**/ void Show(Node *head, Node *tail, bool asc, bool riwayat);
+/**/ void Show(Node *head, Node *tail, bool asc, bool riwayat, string specific);
 /**/ int  lenLL(Node *head);
 /**/ long long int gettime();
 /**/ void quickSort(struct Node **headRef, bool username);
@@ -168,34 +168,36 @@ bool Admin_Menu(){
 
 	cout << "\n  Selamat Datang " << active_user <<"!!!\n\
 			 \n  --+ 1. Buat Pesanan\
-			 \n  --+ 2. Lihat Pesanan\
-			 \n  --+ 3. Hapus atau Selesaikan Pesanan\
-		     \n  --+ 4. Lihat Riwayat Pesanan\
-		     \n  --+ 5. Update Data Akun\
-			 \n  --+ 6. Search Data Akun\
-			 \n  --+ 7. Keluar";
+			 \n  --+ 2. Lihat Semua Pesanan\
+			 \n  --+ 3. Lihat Pesanan Akun Admin\
+			 \n  --+ 4. Hapus atau Selesaikan Pesanan\
+		     \n  --+ 5. Lihat Riwayat Pesanan\
+		     \n  --+ 6. Update Data Akun\
+			 \n  --+ 7. Search Data Akun\
+			 \n  --+ 8. Keluar";
 
 	switch (getch()){
 		case '1':
 			Add_Last(&HEAD, &TAIL, HEADACC);
 			break;
 		case '2':
-			quickSort(&HEAD, true);
-			Show(HEAD, TAIL, true, false);
+			Show(HEAD, TAIL, true, false, "");
 			break;
 		case '3':
-			quickSort(&HEAD, false);
-			To_Riwayat(&HEAD, &TAIL, &HEADLOG, &TAILLOG);
+			Show(HEAD, TAIL, true, false, active_user);
 			break;
 		case '4':
-			Show(HEADLOG, TAILLOG, true, true);
+			To_Riwayat(&HEAD, &TAIL, &HEADLOG, &TAILLOG);
 			break;
 		case '5':
+			Show(HEADLOG, TAILLOG, true, true, "");
 			break;
 		case '6':
-			Search(&HEAD, &TAIL);
 			break;
 		case '7':
+			Search(&HEAD, &TAIL);
+			break;
+		case '8':
 			active_user = "";
 			return false;
 			break;
@@ -221,6 +223,7 @@ bool User_Menu(){
 			Add_Last(&HEAD, &TAIL, HEADACC);
 			break;
 		case '2':
+			Show(HEAD, TAIL, true, false, active_user);
 			break;
 		case '3':
 			Update_Data(active_user, &HEADACC, &TAILACC);
@@ -530,7 +533,7 @@ void Admin_Acc(Node **head, Node **tail){   // Hapus Nanti
 }
 
 
-void Show(Node *head, Node *tail, bool asc, bool riwayat){
+void Show(Node *head, Node *tail, bool asc, bool riwayat, string specific){
 
 	system("CLS");
 
@@ -559,26 +562,48 @@ void Show(Node *head, Node *tail, bool asc, bool riwayat){
 
 		while (temp != NULL){
 			
-			if(riwayat == false){
+			if(temp->data.username == specific || specific == ""){
+				
+				cout << "\n  -----------------[" << indeks << "]----------------:" << endl;
+				
+				if(riwayat == false){
 			
-				cout << " [" << indeks << "]" << endl;
-				cout << " Nama Customer\t: "  << temp->data.nama << endl;
-				cout << " No Handphone\t: "   << temp->data.nomor_hp << endl;
-				cout << " Jenis Cucian\t: "   << temp->data.kategori << endl;
-				cout << " Berat Cucian\t: "   << temp->data.berat << endl;
-				cout << " Harga Cucian\t: "   << temp->data.harga << endl;
-				
-			} else{
-				
-				cout << " [" << indeks << "]" << endl;
-				cout << " Nama Customer\t: "  << temp->log.nama << endl;
-				cout << " No Handphone\t: "   << temp->log.nomor_hp << endl;
-				cout << " Jenis Cucian\t: "   << temp->log.kategori << endl;
-				cout << " Berat Cucian\t: "   << temp->log.berat << endl;
-				cout << " Harga Cucian\t: "   << temp->log.harga << endl;
-				cout << " Tanggal Selesai\t: "   << temp->log.tanggal << endl;
-				
+					cout << " | Nama Customer\t: "  << temp->data.nama << endl;
+					cout << " | No Handphone \t: "   << temp->data.nomor_hp << endl;
+					cout << " | Jenis Cucian \t: "   << temp->data.kategori << endl;
+					cout << " | Berat Cucian \t: "   << temp->data.berat << endl;
+					cout << " | Harga Cucian \t: "   << temp->data.harga << endl;
+					
+				} else{
+					
+					cout << " | Nama Customer\t: "  << temp->log.nama << endl;
+					cout << " | No Handphone\t\t: "   << temp->log.nomor_hp << endl;
+					cout << " | Jenis Cucian\t\t: "   << temp->log.kategori << endl;
+					cout << " | Berat Cucian\t\t: "   << temp->log.berat << endl;
+					cout << " | Harga Cucian\t\t: "   << temp->log.harga << endl;
+					
+					long long int a = temp->log.tanggal;
+					int year = (a % 1000000000000 - a % 10000000000)/10000000000;
+					int month = (a % 10000000000 - a % 100000000)/100000000;
+					int day = (a % 100000000 - a % 1000000)/1000000;
+					int hour = (a % 1000000 - a % 10000)/10000;
+					int min = (a % 10000 - a % 100)/100;
+					int sec = a % 100;
+		
+					// Bagian Pemberian Tanggal
+					cout << " | Tanggal Selesai\t: ";
+					cout << year << "/" << month       << "/";
+					cout << (day - 10 > 0 ? "" : "0")  << day  << "  ";
+					cout << (hour - 10 > 0 ? "" : "0") << hour << ":";
+					cout << (min - 10 > 0 ? "" : "0")  << min  << ":";
+					cout << (sec - 10 > 0 ? "" : "0")  << sec  << endl;
+					
+				}
+			
+				cout << "  ------------------------------------:" << endl;
+			
 			}
+			
 
 			// Traversal
 			// Ascending
@@ -614,8 +639,6 @@ void To_Riwayat(Node **head, Node **tail, Node **headlog, Node **taillog){
 	newNode->log.tanggal  = gettime();
 	newNode->prev = NULL;
 	newNode->next = NULL;
-	
-	system("pause");
 
 	if (*headlog == NULL && *taillog == NULL){
 		*taillog = newNode;
@@ -633,6 +656,7 @@ void To_Riwayat(Node **head, Node **tail, Node **headlog, Node **taillog){
 void Delete_First(Node **head, Node **tail){
 	
 	if (*head == NULL && *tail == NULL){
+		system("CLS");
 		cout << "  =======================================================" << endl;
 		cout << " |                  LinkedList Kosong                   |" << endl;
 		cout << "  =======================================================" << endl;
@@ -643,8 +667,9 @@ void Delete_First(Node **head, Node **tail){
 		*head = NULL;
 		*tail = NULL;
 		delete del;
+		system("CLS");
 		cout << "\n  =======================================================" << endl;
-		cout << " |              Data Telah Berhasil Dihapus              |" << endl;
+		cout << " |            Data Telah Berhasil Diselesaikan           |" << endl;
 		cout << "  =======================================================" << endl;
 		system("pause");
 	}
@@ -856,7 +881,7 @@ void quickSort(struct Node **headRef, bool username){
     return;
 }
 
-//Fibonacci Search algorithm
+
 int fibonacciSearch(Node *node, string x, int n)
 {
     int F0 = 0;

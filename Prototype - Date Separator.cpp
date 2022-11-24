@@ -4,17 +4,23 @@ using namespace std;
 
 
 int main(){
-	int a = 20221103;
-	int year = a/10000;
-	int month = a/100 - a/10000 * 100;
-	int day = a - a/100 * 100;
+	
+	long long int a = 20221103235901;
+	int year = (a % 1000000000000 - a % 10000000000)/10000000000;
+	int month = (a % 10000000000 - a % 100000000)/100000000;
+	int day = (a % 100000000 - a % 1000000)/1000000;
+	int hour = (a % 1000000 - a % 10000)/10000;
+	int min = (a % 10000 - a % 100)/100;
+	int sec = a % 100;
 	
 	
-	cout << year << "/" << month << "/";
-	if(day - 10 > 0){
-		cout << day ;
-	}
-	else{
-		cout << "0" << day;
-	}
+	cout << year << "/" << month       << "/";
+	cout << (day - 10 > 0 ? "" : "0")  << day  << "   ";
+	cout << (hour - 10 > 0 ? "" : "0") << hour << ":";
+	cout << (min - 10 > 0 ? "" : "0")  << min  << ":";
+	cout << (sec - 10 > 0 ? "" : "0")  << sec  << endl;
+
+
+
+
 }
