@@ -103,7 +103,7 @@ using namespace std;
 /**/ void Show(Node *head, Node *tail, bool asc, bool riwayat, string specific);
 /**/ void Menu_Sort(Node **head, Node **tail, bool riwayat, string active);
 /**/ int  lenLL(Node *head);
-/**/ void quickSort(struct Node **headRef, bool username, bool id);
+/**/ void quickSort(struct Node **headRef, bool username, bool id, bool riwayat);
 /**/ int  Fibonacci_Search(Node *node, string x, int y, int n, bool id);
 /**/ void Search(Node **head, bool id);
 /**/ void Menu_Search(Node **head);
@@ -112,8 +112,8 @@ using namespace std;
 /**/ long long int gettime();
 /**/ char Controller(bool anti);
 /**/ struct Node *getTail(struct Node *cur);
-/**/ struct Node *partition(struct Node *head, struct Node *end, struct Node **newHead, struct Node **newEnd, bool username, bool id);
-/**/ struct Node *quickSortRecur(struct Node *head, struct Node *end, bool username, bool id);
+/**/ struct Node *partition(struct Node *head, struct Node *end, struct Node **newHead, struct Node **newEnd, bool username, bool id, bool riwayat);
+/**/ struct Node *quickSortRecur(struct Node *head, struct Node *end, bool username, bool id, bool riwayat);
 /**/ string Censorship(string teks, bool *state);
 /**/
 /**/
@@ -245,7 +245,7 @@ bool Admin_Menu(){
 					To_Riwayat(&HEAD, &TAIL, &HEADLOG, &TAILLOG);
 					break;
 				case 4:
-					Menu_Sort(&HEADACC, &TAILACC, true, "");
+					Menu_Sort(&HEADLOG, &TAILLOG, true, "");
 					break;
 				case 5:
 					Update_Data(active_user, &HEADACC, &TAILACC);
@@ -485,7 +485,12 @@ void Pesanan(Node **head, Node **tail, Node *headacc, Node *headlog){
 	}
 
 	cout << " No Handphone\t: +62";
-	cin >> nomor;
+	nomor = Check_LL_Int();
+	if(nomor == -9999){
+		cout << "   Nomor Handphone Invalid!!" << endl;
+		system("pause");
+		return;
+	}
 	if(nomor == 0){
 		nomor = temp->akun.no_hp;
 		cout << "\t ---> +62" << nomor << endl;
@@ -650,7 +655,7 @@ void Register(Node *head, Node **headacc, Node **tailacc){
 	string nama, email, alamat, username, password;
 	long long int no_hp;
 	
-	quickSort(&(*headacc), true, false);
+	quickSort(&(*headacc), true, false, false);
 	
 	while(true){
 		system("CLS");
@@ -688,7 +693,12 @@ void Register(Node *head, Node **headacc, Node **tailacc){
 	}
 
 	cout << " No Handphone\t: +62";
-	cin >> no_hp;
+	no_hp = Check_LL_Int();
+	if(no_hp == -9999){
+		cout << "   Nomor hp invalid!" << endl;
+		system("pause");
+		return;
+	}
 	if(no_hp == 0){
 		return;
 	}
@@ -858,11 +868,12 @@ void To_Riwayat(Node **head, Node **tail, Node **headlog, Node **taillog){
 	newNode->log.id       = (*head)->data.id;
 	newNode->log.nama     = (*head)->data.nama;
 	newNode->log.nomor_hp = (*head)->data.nomor_hp;
+	newNode->log.alamat   = (*head)->data.alamat;
 	newNode->log.kategori = (*head)->data.kategori;
 	newNode->log.berat    = (*head)->data.berat;
 	newNode->log.harga    = (*head)->data.harga;
 	newNode->log.username = (*head)->data.username;
-	newNode->log.username  = gettime();
+	newNode->log.tanggal  = gettime();
 	newNode->prev = NULL;
 	newNode->next = NULL;
 
@@ -1023,12 +1034,12 @@ struct Node *getTail(struct Node *cur){
     return cur;
 }
  
-struct Node *partition(struct Node *head, struct Node *end, struct Node **newHead, struct Node **newEnd, bool username, bool id){
+struct Node *partition(struct Node *head, struct Node *end, struct Node **newHead, struct Node **newEnd, bool username, bool id, bool riwayat){
     struct Node *pivot = end;
     struct Node *prev = NULL, *cur = head, *tail = pivot;
     
     while (cur != pivot){
-		if(username == true){
+    	if(riwayat == false){
 			if (cur->akun.username < pivot->akun.username){
 				if ((*newHead) == NULL)
 				(*newHead) = cur;
@@ -1061,9 +1072,6 @@ struct Node *partition(struct Node *head, struct Node *end, struct Node **newHea
 					cur = tmp;
 				}
 			}
-			else if(id == false) {
-				continue;
-			}
 			else {
 				if (cur->log.username < pivot->log.username){
 					if ((*newHead) == NULL)
@@ -1087,65 +1095,28 @@ struct Node *partition(struct Node *head, struct Node *end, struct Node **newHea
     return pivot;
 }
  
-struct Node *quickSortRecur(struct Node *head, struct Node *end, bool username, bool id){
+struct Node *quickSortRecur(struct Node *head, struct Node *end, bool username, bool id, bool riwayat){
     if (!head || head == end) return head;
     Node *newHead = NULL, *newEnd = NULL;
-
-	if(username == true) {
-		struct Node* pivot = partition(head, end, &newHead, &newEnd, true, false);
-		if (newHead != pivot) {
-			struct Node *tmp = newHead;
-			while (tmp->next != pivot) tmp = tmp->next;
-			tmp->next = NULL;
-			newHead = quickSortRecur(newHead, tmp, true, false);
-			tmp = getTail(newHead);
-			tmp->next = pivot;
-			pivot->next = quickSortRecur(pivot->next, newEnd, true, false);
-		}
-	}
-    else {
-		if(id == true){
-			struct Node* pivot = partition(head, end, &newHead, &newEnd, false, true);
-			if (newHead != pivot) {
-				struct Node *tmp = newHead;
-				while (tmp->next != pivot) tmp = tmp->next;
-				tmp->next = NULL;
-				newHead = quickSortRecur(newHead, tmp, false, true);
-				tmp = getTail(newHead);
-				tmp->next = pivot;
-				pivot->next = quickSortRecur(pivot->next, newEnd, false, true);
-			}
-		}
-		else {		
-			struct Node* pivot = partition(head, end, &newHead, &newEnd, false, false);
-			if (newHead != pivot){
-				struct Node *tmp = newHead;
-				while (tmp->next != pivot) tmp = tmp->next;
-				tmp->next = NULL;
-				newHead = quickSortRecur(newHead, tmp, false, false);
-				tmp = getTail(newHead);
-				tmp->next = pivot;
-				pivot->next = quickSortRecur(pivot->next, newEnd, false, false);
-			}
-		}
+    
+	struct Node* pivot = partition(head, end, &newHead, &newEnd, username, id, riwayat);
+	
+	if (newHead != pivot) {
+		struct Node *tmp = newHead;
+		while (tmp->next != pivot) tmp = tmp->next;
+		tmp->next = NULL;
+		newHead = quickSortRecur(newHead, tmp, username, id, riwayat);
+		tmp = getTail(newHead);
+		tmp->next = pivot;
+		pivot->next = quickSortRecur(pivot->next, newEnd, username, id, riwayat);
 	}
 	
     return newHead;
 }
  
-void quickSort(struct Node **headRef, bool username, bool id){
-	if(username == true){
-    	(*headRef) = quickSortRecur(*headRef, getTail(*headRef), true, false);
-	}
-	else{
-		if(id == true){
-			(*headRef) = quickSortRecur(*headRef, getTail(*headRef), false, true);
-		}
-
-		else{
-			(*headRef) = quickSortRecur(*headRef, getTail(*headRef), false, false);
-		}
-	}
+void quickSort(struct Node **headRef, bool username, bool id, bool riwayat){
+    
+	(*headRef) = quickSortRecur(*headRef, getTail(*headRef), username, id, riwayat);
     return;
 }
 
@@ -1266,7 +1237,7 @@ void Search(Node **head, bool id) {
 	Node *temp = *head;
 
 	if(id == false) {
-		quickSort(head, true, false);
+		quickSort(head, true, false, false);
 		cout << " =========================================================\
 			\n                          SEARCH DATA                     \
 			\n =========================================================\n\
@@ -1361,47 +1332,66 @@ void Menu_Sort(Node **head, Node **tail, bool riwayat, string active){
     cout << " Masukkan pilihan : "						          		;
     tanya_sort = getch()												;
     
-    switch (tanya_sort){
-    	
-    	case '1':
-		case '2':
-			asc = (tanya_sort == '1')? true : false						;
-			
-			system("CLS")												;
-			cout << endl												;
-			cout << "  ==============================" << endl			;
-    		cout << " |       Urut berdasarkan?      |" << endl			;
-    		cout << "  ==============================" << endl			;
-    		cout << " |    [1] Username              |" << endl			;
-    		cout << " |    [2] ID Laundry            |" << endl			;
-    		cout << "  ==============================" << endl			;
-    		cout << endl												;
-    		cout << " Masukkan pilihan\t: "								;
-    		
-			tanya_atribut = getch()										;
-	    	switch (tanya_atribut){
-		        case '1':
-					if(riwayat == true){quickSort(&(*head), true, false);}			;
-					Show(*head, *tail, asc, riwayat, active)						;
-					break															;
-		        case '2':
-					if(riwayat == true){quickSort(&(*head), false, true);}			;
-					Show(*head, *tail, asc, riwayat, active)						;
-					break															;
-		        default:
-					cout << "\n !!  Pilihan Tidak Tersedia  !!" << endl				;
-					getch()															;
-					system("CLS")													;
-					break															;
-    		}
-    		break;
-    		
-		default:
-			cout << endl															;
-			cout << " !!  Pilihan Tidak Tersedia  !!" << endl						;
-			system("pause")															;
-			system("CLS")															;
-			break																	;
+    if(active_user == "Admind"){
+	    switch (tanya_sort){
+	    	
+	    	case '1':
+			case '2':
+				asc = (tanya_sort == '1')? true : false						;
+				
+				system("CLS")												;
+				cout << endl												;
+				cout << "  ==============================" << endl			;
+	    		cout << " |       Urut berdasarkan?      |" << endl			;
+	    		cout << "  ==============================" << endl			;
+	    		cout << " |    [1] Username              |" << endl			;
+	    		cout << " |    [2] ID Laundry            |" << endl			;
+	    		cout << "  ==============================" << endl			;
+	    		cout << endl												;
+	    		cout << " Masukkan pilihan\t: "								;
+	    		
+				tanya_atribut = getch()										;
+		    	switch (tanya_atribut){
+			        case '1':
+						if(riwayat == true){quickSort(&(*head), true, false, true);}			;
+						Show(*head, *tail, asc, riwayat, active)						;
+						break															;
+			        case '2':
+						if(riwayat == true){quickSort(&(*head), false, true, true);}			;
+						Show(*head, *tail, asc, riwayat, active)						;
+						break															;
+			        default:
+						cout << "\n !!  Pilihan Tidak Tersedia  !!" << endl				;
+						getch()															;
+						system("CLS")													;
+						break															;
+	    		}
+	    		break;
+	    		
+			default:
+				cout << endl															;
+				cout << " !!  Pilihan Tidak Tersedia  !!" << endl						;
+				system("pause")															;
+				system("CLS")															;
+				break																	;
+		}
+	}
+	else{
+		switch (tanya_sort){
+			case '1':
+				Show(*head, *tail, true, false, "");
+				break;
+			case '2':
+				Show(*head, *tail, false, false, "");
+				break;
+		
+			default:
+				cout << endl															;
+				cout << " !!  Pilihan Tidak Tersedia  !!" << endl						;
+				system("pause")															;
+				system("CLS")															;
+				break																	;
+		}
 	}
 }
 
