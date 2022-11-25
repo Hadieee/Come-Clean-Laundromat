@@ -407,7 +407,7 @@ void Login(Node *head, Node *tail){
 	
 	// Jikalau Tidak Cocoque
 	else{
-		cout << " Email atau Password\n";
+		cout << " Email atau Password Salah\n";
 		system("pause");
 	}
 }
@@ -846,9 +846,9 @@ void Update_Data(string username, Node **head, Node **tail){
 	long long int no_hp;
 
 	cout << " =========================================================\
-           \n                          FORM USER                       \
+           \n                          FORM UPDATE                       \
     	   \n =========================================================\n\n \
-    	   \n              UPDATE DATA AKUN CUSTOMER LAUNDRY           \
+    	   \n                   UPDATE DATA AKUN LAUNDRY               \
     	   \n ---------------------------------------------------------\
     	   \n\
     	   \n           (Ketik '0' untuk menggunakan data lama)"
