@@ -1019,14 +1019,14 @@ void Search(Node **head, Node **tail) {
 	int ind = fibonacciSearch(*head, nama, lenLL(*head));
     
 	if (ind >= 0){
-		cout << " ==================================" << endl;
+		cout << " \n==================================" << endl;
 		cout << "||        Data ditemukan         ||" << endl;
 		cout << " ==================================" << endl;
 
-		cout << "\n  -----------------[" << ind << "]----------------:" << endl;
+		cout << "\n  ----------------[" << ind << "]--------------:" << endl;
 
-		while(temp->data.username != nama) {
-			if(temp->data.username == nama){
+		while(temp != NULL) {
+			if(temp->akun.username == nama){
 				cout << " | Nama Customer\t: "  << temp->data.nama << endl;
 				cout << " | No Handphone \t: "   << temp->data.nomor_hp << endl;
 				cout << " | Jenis Cucian \t: "   << temp->data.kategori << endl;
