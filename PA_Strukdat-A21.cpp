@@ -7,6 +7,16 @@
 using namespace std;
 
 
+
+#define BACKSPACE 8
+#define ENTER     13
+#define ESCAPE    27
+#define ATAS      72
+#define KIRI      75
+#define KANAN     77
+#define BAWAH     80
+
+
 ////   D E K L A R A S I   ////
 /**/ struct Data_Laundry{
 /**/ 	string nama;
@@ -68,7 +78,10 @@ using namespace std;
 /**/
 /**/
 /**/ string active_user = "";
-/**/ 
+/**/ int First_Curr = 0;
+/**/ int Admin_Curr = 0;
+/**/ int User_Curr = 0;
+/**/
 /**/
 /**/
 
@@ -86,13 +99,16 @@ using namespace std;
 /**/ void Version(); //<----------- Hapus Nanti
 /**/ void Show(Node *head, Node *tail, bool asc, bool riwayat, string specific);
 /**/ int  lenLL(Node *head);
-/**/ long long int gettime();
 /**/ void quickSort(struct Node **headRef, bool username);
+/**/ int  fibonacciSearch(Node *node, string x, int n);
+/**/ void Search(Node **head, Node **tail);
+/**/ int  Check_Int();
+/**/ long long int Check_LL_Int();
+/**/ long long int gettime();
+/**/ char Controller();
 /**/ struct Node *getTail(struct Node *cur);
 /**/ struct Node *partition(struct Node *head, struct Node *end, struct Node **newHead, struct Node **newEnd, bool username);
 /**/ struct Node *quickSortRecur(struct Node *head, struct Node *end, bool username);
-/**/ int fibonacciSearch(Node *node, string x, int n);
-/**/ void Search(Node **head, Node **tail);
 /**/
 /**/
 // --------- Utama ------- //
@@ -132,30 +148,47 @@ int main()
 // =======	DAFTAR VOID MENU ======
 
 bool First_Menu(){
-
+	string curr[4] = {"", "", "", ""};
+	curr[First_Curr] = "  <+-~ [ENTER]";
 	system("CLS");
 
 	cout << "\n Aplikasi Laundry\
-		     \n Versi 1.0";
-
-	cout << "\n  --+ 1. Login\
-		     \n  --+ 2. Register\
-		     \n  --+ 3. Exit\
-		     \n  --+ 4. Versi Aplikasi";
+		     \n Versi 1.0\
+			 \n  --+  Login" << curr[0]<< "\
+		     \n  --+  Register" << curr[1]<< "\
+		     \n  --+  Exit" << curr[2]<< "\
+		     \n  --+  Versi Aplikasi" << curr[3] << endl;
 		     
-	switch (getch()){
-		case '1':
-			Login(HEADACC, TAILACC);
+	switch (Controller()){
+		case ATAS:
+			First_Curr = (First_Curr-1 == -1)? 3 : First_Curr - 1;
 			break;
-		case '2':
-			Register(HEADACC, &HEADACC, &TAILACC);
+			
+		case BAWAH:
+			First_Curr = (First_Curr+1 == 4)? 0 : First_Curr + 1;
 			break;
-		case '3':
-			exit(0);
+			
+		case ENTER:
+			Admin_Curr = 0;
+			User_Curr  = 0;
+			
+			switch(First_Curr){
+				
+				case 0:
+					Login(HEADACC, TAILACC);
+					break;
+				case 1:
+					Register(HEADACC, &HEADACC, &TAILACC);
+					break;
+				case 2:
+					exit(0);
+					break;
+				case 3:
+					Version();
+					break;
+			}
 			break;
-		case '4':
-			Version();
-			break;
+			
 		default:
 			break;
 	};
@@ -166,45 +199,59 @@ bool First_Menu(){
 }
 
 bool Admin_Menu(){
-	
+	string curr[8] = {"", "", "", "", "", "", "", ""};
+	curr[Admin_Curr] = "  <+-~ [ENTER]";
 	system("CLS");
 
 	cout << "\n  Selamat Datang " << active_user <<"!!!\n\
-			 \n  --+ 1. Buat Pesanan\
-			 \n  --+ 2. Lihat Semua Pesanan\
-			 \n  --+ 3. Lihat Pesanan Akun Admin\
-			 \n  --+ 4. Hapus atau Selesaikan Pesanan\
-		     \n  --+ 5. Lihat Riwayat Pesanan\
-		     \n  --+ 6. Update Data Akun\
-			 \n  --+ 7. Search Data Akun\
-			 \n  --+ 8. Keluar";
+			 \n  --+  Buat Pesanan" << curr[0] << "\
+			 \n  --+  Lihat Semua Pesanan" << curr[1] << "\
+			 \n  --+  Lihat Pesanan Akun Admin" << curr[2] << "\
+			 \n  --+  Hapus atau Selesaikan Pesanan" << curr[3] << "\
+		     \n  --+  Lihat Riwayat Pesanan" << curr[4] << "\
+		     \n  --+  Update Data Akun" << curr[5] << "\
+			 \n  --+  Search Data Akun" << curr[6] << "\
+			 \n  --+  Keluar" << curr[7] << endl;
 
-	switch (getch()){
-		case '1':
-			Pesanan(&HEAD, &TAIL, HEADACC);
+
+	switch (Controller()){
+		case ATAS:
+			Admin_Curr = (Admin_Curr-1 == -1)? 7 : Admin_Curr - 1;
 			break;
-		case '2':
-			Show(HEAD, TAIL, true, false, "");
+			
+		case BAWAH:
+			Admin_Curr = (Admin_Curr+1 == 8)? 0 : Admin_Curr + 1;
 			break;
-		case '3':
-			Show(HEAD, TAIL, true, false, active_user);
-			break;
-		case '4':
-			To_Riwayat(&HEAD, &TAIL, &HEADLOG, &TAILLOG);
-			break;
-		case '5':
-			Show(HEADLOG, TAILLOG, true, true, "");
-			break;
-		case '6':
-			Update_Data(active_user, &HEADACC, &TAILACC);
-			break;
-		case '7':
-			Search(&HEADACC, &TAILACC);
-			break;
-		case '8':
-			active_user = "";
-			return false;
-			break;
+			
+		case ENTER:
+			switch (Admin_Curr){
+				case 0:
+					Pesanan(&HEAD, &TAIL, HEADACC);
+					break;
+				case 1:
+					Show(HEAD, TAIL, true, false, "");
+					break;
+				case 2:
+					Show(HEAD, TAIL, true, false, active_user);
+					break;
+				case 3:
+					To_Riwayat(&HEAD, &TAIL, &HEADLOG, &TAILLOG);
+					break;
+				case 4:
+					Show(HEADLOG, TAILLOG, true, true, "");
+					break;
+				case 5:
+					Update_Data(active_user, &HEADACC, &TAILACC);
+					break;
+				case 6:
+					Search(&HEADACC, &TAILACC);
+					break;
+				case 7:
+					active_user = "";
+					return false;
+					break;
+			}
+		
 		default:
 			break;
 	}
@@ -213,29 +260,42 @@ bool Admin_Menu(){
 }
 
 bool User_Menu(){
-	
+	string curr[4] = {"", "", "", ""};
+	curr[User_Curr] = "  <+-~ [ENTER]";
 	system("CLS");
 
 	cout << "\n  Selamat Datang " << active_user <<"!!!\n\
-			 \n  --+ 1. Pesan\
-		     \n  --+ 2. Lihat Pesananku\
-		     \n  --+ 3. Update Data Akun\
-			 \n  --+ 4. Keluar";
+			 \n  --+  Pesan" << curr[0] << "\
+		     \n  --+  Lihat Pesananku" << curr[1] << "\
+		     \n  --+  Update Data Akun" << curr[2] << "\
+			 \n  --+  Keluar" << curr[3] << endl;
 
-	switch (getch()){
-		case '1':
-			Pesanan(&HEAD, &TAIL, HEADACC);
+	switch (Controller()){
+		case ATAS:
+			User_Curr = (User_Curr-1 == -1)? 3 : User_Curr - 1;
 			break;
-		case '2':
-			Show(HEAD, TAIL, true, false, active_user);
+			
+		case BAWAH:
+			User_Curr = (User_Curr+1 == 4)? 0 : User_Curr + 1;
 			break;
-		case '3':
-			Update_Data(active_user, &HEADACC, &TAILACC);
-			break;
-		case '4':
-			active_user = "";
-			return false;
-			break;
+			
+		case ENTER:
+			switch (User_Curr){
+				case 0:
+					Pesanan(&HEAD, &TAIL, HEADACC);
+					break;
+				case 1:
+					Show(HEAD, TAIL, true, false, active_user);
+					break;
+				case 2:
+					Update_Data(active_user, &HEADACC, &TAILACC);
+					break;
+				case 3:
+					active_user = "";
+					return false;
+					break;
+			}
+		
 		default:
 			break;
 	}
@@ -1043,4 +1103,59 @@ void Search(Node **head, Node **tail) {
         cout << Nama << " tidak ada dalam Linked List";
 		getche();
 	}
+}
+
+
+
+int Check_Int(){
+	int var;
+	
+	// Bukan Integer
+	cin >> var;
+	if(cin.fail()){
+		cin.clear();
+		fflush(stdin);
+		return -9999;
+	}
+	
+	// Adalah Integer
+	else{
+		return var;
+	}
+}
+
+
+long long int Check_LL_Int(){
+	long long int var;
+	
+	// Bukan Integer
+	cin >> var;
+	if(cin.fail()){
+		cin.clear();
+		fflush(stdin);
+		return -9999;
+	}
+	
+	// Adalah Integer
+	else{
+		return var;
+	}
+}
+
+
+char Controller(){
+	char arah;
+	char tujuan;
+	
+	switch(arah = getch()){
+		
+		case -32:
+			tujuan = getch();
+			break;
+			
+		default:
+			tujuan = arah;
+			break;
+	}
+	return tujuan;
 }
