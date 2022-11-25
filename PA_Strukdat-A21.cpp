@@ -26,7 +26,6 @@ using namespace std;
 /**/ 	char kategori;
 /**/ 	double berat;
 /**/ 	int harga;
-/**/ 	int total;
 /**/	string username;
 /**/ };
 ////
@@ -39,7 +38,6 @@ using namespace std;
 /**/ 	char kategori;
 /**/ 	double berat;
 /**/ 	int harga;
-/**/ 	int total;
 /**/	string username;
 /**/ 	long long int tanggal;
 /**/ };
@@ -444,12 +442,13 @@ void Login(Node *head, Node *tail, string usn, string pass){
 
 void Pesanan(Node **head, Node **tail, Node *headacc, Node *headlog){
 	system("cls");
-	char kategori;
+	char kategori, opsi = KIRI;
 	string nama;
 	string alamat;
 	int intkategori, harga;
 	long long int nomor;
 	double berat;
+	bool state = false;
 	
 	// Transvers
 	Node *temp = headacc;
@@ -528,11 +527,67 @@ void Pesanan(Node **head, Node **tail, Node *headacc, Node *headlog){
 	harga = berat * hrg[intkategori - 1];
 	cout << harga;
 
+	cout << " ---------------------------------------------------------" << endl;
+	cout << " Total Harga : Rp. ";
+	harga = berat * hrg[intkategori - 1];
+	cout << harga <<endl;
+	
+	
+	// Konfirmasi Pesanan
+	while(true){
+		system("CLS");
+		
+		cout << "\n\t  -------------------[ Pesanan ]-------------------:" << endl;
+		cout << "\t | Nama Customer\t: "   << nama << endl;
+		cout << "\t | No Handphone \t: "   << nomor << endl;
+		cout << "\t | Alamat Diantar\t: "         << alamat << endl;
+		cout << "\t | Jenis Cucian \t: "   << ctg[intkategori] << endl;
+		cout << "\t | Berat Cucian \t: "   << berat << endl;
+		cout << "\t |       TOTAL HARGA  >> Rp"   << harga << " <<" << endl;
+		cout << "\t  ------------------------------------------------:\n" << endl;
+		
+		cout << "     .........................................................." << endl;
+		cout << "    |      Apakah Anda Yakin Ingin Melanjutkan Pesanan?        |" <<endl;
+		cout << "    |   (PESANAN YANG SUDAH DIBUAT TIDAK DAPAT DIBATALKAN!)    |" <<endl;
+		cout << "     ----------------------------------------------------------" << endl;
+		
+		if(opsi == KIRI){
+			cout << "\t\t\t" << char(204) << " YA " << char(185) << "\t\t  TIDAK ";
+		}
+		else if(opsi == KANAN){
+			cout << "\t\t\t" << "  YA "<< "\t\t" << char(204) << " TIDAK " << char(185);
+		}
+		
+		switch(Controller(false)){
+			case KIRI:
+				opsi = KIRI;
+				break;
+			case KANAN:
+				opsi = KANAN;
+				break;
+			case ENTER:
+				state = true;
+				break;
+			default:
+				break;
+		}
+				
+		if(state == true){
+			if(opsi == KIRI){
+				break;
+			}
+			else{
+				return;
+			}
+		}
+	}
+
 	int id = lenLL(*head) + lenLL(headlog);
 	Add_Last(&(*head), &(*tail), kategori, nama, alamat, harga, nomor, berat, id);
 
+	system("CLS");
 	cout << endl;
-	cout << "  =======================================================" << endl;
+	cout << "\n  =======================================================" << endl;
 	cout << " |           Pesanan Telah Berhasil Ditambahkan          |" << endl;
 	cout << "  =======================================================" << endl;
 	system("pause");
@@ -545,6 +600,7 @@ void Add_Last(Node **head, Node **tail, char kategori, string nama,	string alama
 	newNode->data.id = id;
 	newNode->data.nama = nama;
 	newNode->data.nomor_hp = nomor;
+	newNode->data.alamat = alamat;
 	newNode->data.kategori = kategori;
 	newNode->data.berat = berat;
 	newNode->data.harga = harga;
@@ -726,8 +782,9 @@ void Show(Node *head, Node *tail, bool asc, bool riwayat, string specific){
 					cout << " | Username Akun\t: "   << temp->data.username << endl;
 					cout << " | Nama Customer\t: "   << temp->data.nama << endl;
 					cout << " | No Handphone \t: "   << temp->data.nomor_hp << endl;
+					cout << " | Alamat Antar \t: "   << temp->data.alamat << endl;
 					cout << " | Jenis Cucian \t: "   << ctg[(int)temp->data.kategori - 48] << endl;
-					cout << " | Berat Cucian \t: "   << temp->data.berat << endl;
+					cout << " | Berat Cucian \t: "   << temp->data.berat << "kg" << endl;
 					cout << " | Harga Cucian \t: "   << temp->data.harga << endl;
 					cout << "  ## ID-- " << temp->data.id << endl; 
 					
@@ -736,8 +793,9 @@ void Show(Node *head, Node *tail, bool asc, bool riwayat, string specific){
 					cout << " | Username Akun\t: "    << temp->log.username << endl;
 					cout << " | Nama Customer\t: "    << temp->log.nama << endl;
 					cout << " | No Handphone\t\t: "   << temp->log.nomor_hp << endl;
+					cout << " | Alamat Antar \t: "   << temp->log.alamat << endl;
 					cout << " | Jenis Cucian\t\t: "   << ctg[(int)temp->log.kategori - 48] << endl;
-					cout << " | Berat Cucian\t\t: "   << temp->log.berat << endl;
+					cout << " | Berat Cucian\t\t: "   << temp->log.berat << "kg" << endl;
 					cout << " | Harga Cucian\t\t: "   << temp->log.harga << endl;
 					
 					
@@ -1321,7 +1379,6 @@ void Menu_Sort(Node **head, Node **tail, bool riwayat, string active){
     		cout << " Masukkan pilihan\t: "								;
     		
 			tanya_atribut = getch()										;
-			system("CLS")												;
 	    	switch (tanya_atribut){
 		        case '1':
 					if(riwayat == true){quickSort(&(*head), true, false);}			;
@@ -1342,7 +1399,7 @@ void Menu_Sort(Node **head, Node **tail, bool riwayat, string active){
 		default:
 			cout << endl															;
 			cout << " !!  Pilihan Tidak Tersedia  !!" << endl						;
-			getch()																	;
+			system("pause")															;
 			system("CLS")															;
 			break																	;
 	}
