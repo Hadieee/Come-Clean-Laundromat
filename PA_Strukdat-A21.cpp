@@ -102,8 +102,9 @@ using namespace std;
 /**/ void Show(Node *head, Node *tail, bool asc, bool riwayat, string specific);
 /**/ int  lenLL(Node *head);
 /**/ void quickSort(struct Node **headRef, bool username);
-/**/ int  fibonacciSearch(Node *node, string x, int n);
-/**/ void Search(Node **head, Node **tail);
+/**/ int  Fibonacci_Search(Node *node, string x, int y, int n, bool id);
+/**/ void Search(Node **head, bool id);
+/**/ void Menu_Search(Node **head);
 /**/ int  Check_Int();
 /**/ long long int Check_LL_Int();
 /**/ long long int gettime();
@@ -246,7 +247,7 @@ bool Admin_Menu(){
 					Update_Data(active_user, &HEADACC, &TAILACC);
 					break;
 				case 6:
-					Search(&HEADACC, &TAILACC);
+					Menu_Search(&HEADACC);
 					break;
 				case 7:
 					active_user = "";
@@ -581,7 +582,7 @@ void Register(Node *head, Node **headacc, Node **tailacc){
 		fflush(stdin);
 		getline(cin, username);
 		
-		if (fibonacciSearch(*headacc, username, lenLL(*headacc)) != -1){
+		if (Fibonacci_Search(*headacc, username, 0, lenLL(*headacc), false) != -1){
 	        cout << "    Username sudah ada\n";
 	        system("pause");
 		}
@@ -1020,104 +1021,230 @@ void quickSort(struct Node **headRef, bool username){
 }
 
 
-int fibonacciSearch(Node *node, string x, int n)
+int Fibonacci_Search(Node *node, string x, int y, int n, bool id)
 {
-    int F0 = 0;
-    int F1 = 1;
-    int F = F0 + F1;
-    while (F < n)
-    {
-        F0 = F1;
-        F1 = F;
-        F = F0 + F1;
-    }
+	if(id == false){
 
-    int offset = -1;
-    
-    while (F > 1)
-    {
-        // Inisiasi awal
-        Node *head = node;
-        
-        int i = min(offset + F0, n - 1);
-        for (int trv = 0; head->next != NULL && trv < i; trv++)
-        {
-            head = head->next;
-        }
-        if (head->akun.username < x)
-        {
-            F = F1;
-            F1 = F0;
-            F0 = F - F1;
-            offset = i;
-        }
-        else if (head->akun.username > x)
-        {
-            F = F0;
-            F1 = F1 - F0;
-            F0 = F - F1;
-        }
-        else
-        {
-            return i;
-        }
-    }
-
-    Node *head2 = node;
-    for (int trv = 0; head2->next != NULL && trv < offset + 1; trv++)
-    {
-        head2 = head2->next;
-	}
-    if (F1 && head2->akun.username == x)
-        return offset + 1;
-    return -1;
-}
-
-void Search(Node **head, Node **tail) {
-	quickSort(head, true);
-	system("cls");
-	string Nama;
-	Node *temp = *head;
-
-	cout << " =========================================================\
-           \n                          SEARCH DATA                     \
-    	   \n =========================================================\n\
-    	   \n                 SEARCH NAMA COSTUMER LAUNDRY             \
-    	   \n ---------------------------------------------------------\n"
-		 << endl;
-
-	cout << "Masukan nama costumer yang ingin dicari : ";
-	getline(cin, Nama); fflush(stdin);
-
-	int ind = fibonacciSearch(*head, Nama, lenLL(*head));
-    
-	if (ind >= 0){
-		cout << " \n===================================" << endl;
-		cout << "||        Data ditemukan         ||" << endl;
-		cout << "====================================" << endl;
-
-		cout << "\n  ----------------[" << ind << "]--------------:" << endl;
-
-		while(temp != NULL) {
-			if(temp->akun.username == Nama){
-				cout << " | Username Costumer\t: "   << temp->akun.username << endl;
-				cout << " | Nama Costumer    \t: "   << temp->akun.nama << endl;
-				cout << " | Email Costumer   \t: "   << temp->akun.email << endl;
-				cout << " | No HP Costumer   \t: "   << temp->akun.no_hp << endl;
-				cout << " | Alamat Costumer  \t: "   << temp->akun.alamat << endl;
-			}
-				temp = temp->next;
+		int F0 = 0;
+		int F1 = 1;
+		int F = F0 + F1;
+		while (F < n)
+		{
+			F0 = F1;
+			F1 = F;
+			F = F0 + F1;
 		}
 
-		getche();
+		int offset = -1;
+		
+		while (F > 1)
+		{
+			// Inisiasi awal
+			Node *head = node;
+			
+			int i = min(offset + F0, n - 1);
+			for (int trv = 0; head->next != NULL && trv < i; trv++)
+			{
+				head = head->next;
+			}
+			if (head->akun.username < x)
+			{
+				F = F1;
+				F1 = F0;
+				F0 = F - F1;
+				offset = i;
+			}
+			else if (head->akun.username > x)
+			{
+				F = F0;
+				F1 = F1 - F0;
+				F0 = F - F1;
+			}
+			else
+			{
+				return i;
+			}
+		}
+
+		Node *head2 = node;
+		for (int trv = 0; head2->next != NULL && trv < offset + 1; trv++)
+		{
+			head2 = head2->next;
+		}
+		if (F1 && head2->akun.username == x)
+			return offset + 1;
+		return -1;
 	}
-    else {
-        cout << Nama << " tidak ada dalam Linked List";
-		getche();
+
+	else {
+		int F0 = 0;
+		int F1 = 1;
+		int F = F0 + F1;
+		while (F < n)
+		{
+			F0 = F1;
+			F1 = F;
+			F = F0 + F1;
+		}
+
+		int offset = -1;
+		
+		while (F > 1)
+		{
+			// Inisiasi awal
+			Node *head = node;
+			
+			int i = min(offset + F0, n - 1);
+			for (int trv = 0; head->next != NULL && trv < i; trv++)
+			{
+				head = head->next;
+			}
+			if (head->data.id < y)
+			{
+				F = F1;
+				F1 = F0;
+				F0 = F - F1;
+				offset = i;
+			}
+			else if (head->data.id > y)
+			{
+				F = F0;
+				F1 = F1 - F0;
+				F0 = F - F1;
+			}
+			else
+			{
+				return i;
+			}
+		}
+
+		Node *head2 = node;
+		for (int trv = 0; head2->next != NULL && trv < offset + 1; trv++)
+		{
+			head2 = head2->next;
+		}
+		if (F1 && head2->data.id == y)
+			return offset + 1;
+		return -1;
 	}
 }
 
+void Search(Node **head, bool id) {
+	system("cls");
+	string Nama;
+	string test = "test";
+	int Id;
+	Node *temp = *head;
 
+	if(id == false) {
+		quickSort(head, true);
+		cout << " =========================================================\
+			\n                          SEARCH DATA                     \
+			\n =========================================================\n\
+			\n                 SEARCH NAMA COSTUMER LAUNDRY             \
+			\n ---------------------------------------------------------\n"
+			<< endl;\
+
+		cout << "Masukan Nama Costumer Yang Ingin Dicari : ";
+		getline(cin, Nama); fflush(stdin);
+
+		int ind = Fibonacci_Search(*head, Nama, 0, lenLL(*head),false);
+		
+		if (ind >= 0){
+			cout << " \n===================================" << endl;
+			cout << "||        Data ditemukan         ||" << endl;
+			cout << "====================================" << endl;
+
+			cout << "\n  ----------------[" << ind << "]--------------:" << endl;
+
+			while(temp != NULL) {
+				if(temp->akun.username == Nama){
+					cout << " | Username Costumer\t: "   << temp->akun.username << endl;
+					cout << " | Nama Costumer    \t: "   << temp->akun.nama << endl;
+					cout << " | Email Costumer   \t: "   << temp->akun.email << endl;
+					cout << " | No HP Costumer   \t: "   << temp->akun.no_hp << endl;
+					cout << " | Alamat Costumer  \t: "   << temp->akun.alamat << endl;
+				}
+					temp = temp->next;
+			}
+
+			getche();
+		}
+		else {
+			cout << Nama << " Tidak Ada Didalam Data !!!";
+			getche();
+		}
+	}
+	else {
+		cout << " =========================================================\
+			\n                          SEARCH DATA                     \
+			\n =========================================================\n\
+			\n                       SEARCH ID LAUNDRY                  \
+			\n ---------------------------------------------------------\n"
+			<< endl;
+
+		cout << "Masukan ID Laundry Yang Ingin Dicari : ";
+		cin >> Id; fflush(stdin);
+
+		int ind = Fibonacci_Search(&(*HEAD), test, Id, lenLL(&(*HEAD)), true);
+		
+		if (ind >= 0){
+			cout << " \n===================================" << endl;
+			cout << "||        Data ditemukan         ||" << endl;
+			cout << "====================================" << endl;
+
+			cout << "\n  ----------------[" << ind << "]--------------:" << endl;
+
+			while(temp != NULL) {
+				if(temp->data.id == Id){
+					cout << " | ID Laundry   \t: "   << temp->data.id       << endl;
+					cout << " | Nama Customer\t: "   << temp->data.nama    	<< endl;
+					cout << " | No Handphone \t: "   << temp->data.nomor_hp << endl;
+					cout << " | Jenis Cucian \t: "   << temp->data.kategori << endl;
+					cout << " | Berat Cucian \t: "   << temp->data.berat    << endl;
+					cout << " | Harga Cucian \t: "   << temp->data.harga    << endl;
+				}
+					temp = temp->next;
+			}
+
+			getche();
+		}
+		else {
+			cout << "ID " << Id << " Tidak Ada Didalam Data !!!";
+			getche();
+		}
+	}
+}
+
+void Menu_Search(Node **head) {	
+	int tanya_search;
+
+	system("CLS")													;
+	cout  << endl													;
+	cout  << "===========================================" << endl	;
+	cout  << "|   Ingin mencari data berdasarkan apa?   |" << endl	;
+	cout  << "===========================================" << endl	;
+	cout  << "|          [1] Akun Costumer              |" << endl	;
+	cout  << "|          [2] ID Laundry                 |" << endl	;
+	cout  << "===========================================" << endl	;
+	cout  << endl                                                   ;
+	cout  << " Masukkan pilihan : "									;
+	
+	switch (tanya_search = getch()){
+		case ('1'):
+			Search(head, false)                                    ;
+			break                                                   ;
+		case ('2'):
+			Search(&HEAD, true);			                     	;
+			break													;
+		default:
+			system("CLS")											;
+			cout << endl											;
+			cout << " !!  Pilihan Tidak Tersedia  !!\n" << endl	    ;
+			getch()													;
+			break													;
+	}
+}
 
 int Check_Int(){
 	int var;
