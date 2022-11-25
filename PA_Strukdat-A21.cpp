@@ -98,10 +98,11 @@ using namespace std;
 // --------- Utama ------- //
 /**/ void Register(Node *head, Node **headacc, Node **tailacc);
 /**/ void Login(Node *head, Node *tail);
+/**/ void Add_Last(Node **head, Node **tail, char kategori, string nama, string alamat, int harga, long long int nomor, double berat);
 /**/
 /**/ 
 // --------- User -------- //
-/**/ void Add_Last(Node **head, Node **tail, Node *headlog);
+/**/ void Pesanan(Node **head, Node **tail, Node *headlog);
 /**/ void Update_Data(string username, Node **head, Node **tail);
 /**/ 
 /**/ 
@@ -180,7 +181,7 @@ bool Admin_Menu(){
 
 	switch (getch()){
 		case '1':
-			Add_Last(&HEAD, &TAIL, HEADACC);
+			Pesanan(&HEAD, &TAIL, HEADACC);
 			break;
 		case '2':
 			Show(HEAD, TAIL, true, false, "");
@@ -222,7 +223,7 @@ bool User_Menu(){
 
 	switch (getch()){
 		case '1':
-			Add_Last(&HEAD, &TAIL, HEADACC);
+			Pesanan(&HEAD, &TAIL, HEADACC);
 			break;
 		case '2':
 			Show(HEAD, TAIL, true, false, active_user);
@@ -353,7 +354,7 @@ void Login(Node *head, Node *tail){
 
 // ==================== USER ===================== //
 
-void Add_Last(Node **head, Node **tail, Node *headacc){
+void Pesanan(Node **head, Node **tail, Node *headacc){
 	system("cls");
 	char kategori;
 	string nama;
@@ -434,6 +435,16 @@ void Add_Last(Node **head, Node **tail, Node *headacc){
 	harga = berat * hrg[intkategori - 1];
 	cout << harga;
 
+	Add_Last(&(*head), &(*tail), kategori, nama, alamat, harga, nomor, berat);
+
+	cout << endl;
+	cout << "  =======================================================" << endl;
+	cout << " |           Pesanan Telah Berhasil Ditambahkan          |" << endl;
+	cout << "  =======================================================" << endl;
+	system("pause");
+}
+
+void Add_Last(Node **head, Node **tail, char kategori, string nama,	string alamat, int harga, long long int nomor, double berat){
 	// Tambahkan Data ke Struct (Add Last) 
 	Node *newNode = new Node;
 
@@ -457,11 +468,29 @@ void Add_Last(Node **head, Node **tail, Node *headacc){
 		(*tail)->next = newNode;
 		*tail = newNode;
 	}
-	cout << endl;
-	cout << "  =======================================================" << endl;
-	cout << " |           Pesanan Telah Berhasil Ditambahkan          |" << endl;
-	cout << "  =======================================================" << endl;
-	system("pause");
+}
+
+void Add_First(Node **headacc, Node **tailacc, 	string nama, string email, string alamat, string username, string password, long long int no_hp){
+	// Tambahkan Data ke Struct
+	Node *newNode = new Node;
+
+	newNode->akun.nama = nama;
+	newNode->akun.no_hp = no_hp;
+	newNode->akun.email = email;
+	newNode->akun.alamat = alamat;
+	newNode->akun.username = username;
+	newNode->akun.password = password;
+
+	if (*headacc == NULL && *tailacc == NULL){
+		*headacc = newNode;
+		*tailacc = newNode;
+	}
+	else{
+		(*headacc)->prev = newNode;
+		newNode->next = *headacc;
+		newNode->prev = NULL;
+		*headacc = newNode;
+	}
 }
 
 void Register(Node *head, Node **headacc, Node **tailacc){
@@ -534,27 +563,8 @@ void Register(Node *head, Node **headacc, Node **tailacc){
 	}
 	
 	cout << " ---------------------------------------------------------" << endl;
-
-	// Tambahkan Data ke Struct
-	Node *newNode = new Node;
-
-	newNode->akun.nama = nama;
-	newNode->akun.no_hp = no_hp;
-	newNode->akun.email = email;
-	newNode->akun.alamat = alamat;
-	newNode->akun.username = username;
-	newNode->akun.password = password;
-
-	if (*headacc == NULL && *tailacc == NULL){
-		*headacc = newNode;
-		*tailacc = newNode;
-	}
-	else{
-		(*headacc)->prev = newNode;
-		newNode->next = *headacc;
-		newNode->prev = NULL;
-		*headacc = newNode;
-	}
+	
+	Add_First(&(*headacc), &(*tailacc), nama, email, alamat, username, password, no_hp);
 	cout << endl;
 	cout << " =======================================================" << endl;
 	cout << "|            Data Akun Telah Berhasil Dibuat           |" << endl;
