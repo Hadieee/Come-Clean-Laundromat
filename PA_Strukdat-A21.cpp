@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <time.h>
+#include <string>
 using namespace std;
 
 
@@ -99,14 +100,12 @@ using namespace std;
 /**/
 /**/ 
 // --------- Misc ------- //
-/**/ void Version(); //<----------- Hapus Nanti
 /**/ void Show(Node *head, Node *tail, bool asc, bool riwayat, string specific);
 /**/ void Menu_Sort(Node **head, Node **tail, bool riwayat, string active);
 /**/ int  lenLL(Node *head);
 /**/ void quickSort(struct Node **headRef, bool username, bool id, bool riwayat);
 /**/ int  Fibonacci_Search(Node *node, string x, int y, int n, bool id);
-/**/ void Search(Node **head, bool id);
-/**/ void Menu_Search(Node **head);
+/**/ void Search(Node **head, Node **tail);
 /**/ int  Check_Int();
 /**/ long long int Check_LL_Int();
 /**/ long long int gettime();
@@ -115,10 +114,11 @@ using namespace std;
 /**/ struct Node *partition(struct Node *head, struct Node *end, struct Node **newHead, struct Node **newEnd, bool username, bool id, bool riwayat);
 /**/ struct Node *quickSortRecur(struct Node *head, struct Node *end, bool username, bool id, bool riwayat);
 /**/ string Censorship(string teks, bool *state);
+/**/ void ReadjustTail(Node *head, Node **tail);
 /**/
 /**/
 // --------- Utama ------- //
-/**/ void Register(Node *head, Node **headacc, Node **tailacc);
+/**/ void Register(Node **headacc, Node **tailacc);
 /**/ void Login_Input(Node *head, Node *tail);
 /**/ void Login(Node *head, Node *tail, string usn, string pass);
 /**/ void Add_Last(Node **head, Node **tail, char kategori, string nama, string alamat, int harga, long long int nomor, double berat, int id);
@@ -130,7 +130,7 @@ using namespace std;
 /**/ 
 /**/ 
 // --------- Admin ------- //
-/**/ void Admin_Acc(Node **head, Node **tail);  //<--------- Hapus Nanti
+/**/ void Admin_Acc(Node **head, Node **tail);
 /**/ void To_Riwayat(Node **head, Node **tail, Node **headlog, Node **taillog);
 /**/ void Delete_First(Node **head, Node **tail);
 /**/
@@ -155,24 +155,23 @@ int main()
 // =======	DAFTAR VOID MENU ======
 
 bool First_Menu(){
-	string curr[4] = {"", "", "", ""};
+	string curr[3] = {"", "", ""};
 	curr[First_Curr] = "  <+-~ [ENTER]";
 	system("CLS");
 
-	cout << "\n Aplikasi Laundry\
-		     \n Versi 1.0\
+	cout << "\n\n    Aplikasi Laundry\
+		     \n Come Clean Laundromat\
 			 \n  --+  Login" << curr[0]<< "\
 		     \n  --+  Register" << curr[1]<< "\
-		     \n  --+  Exit" << curr[2]<< "\
-		     \n  --+  Versi Aplikasi" << curr[3] << endl;
+		     \n  --+  Exit" << curr[2] << endl;
 		     
 	switch (Controller(false)){
 		case ATAS:
-			First_Curr = (First_Curr-1 == -1)? 3 : First_Curr - 1;
+			First_Curr = (First_Curr-1 == -1)? 2 : First_Curr - 1;
 			break;
 			
 		case BAWAH:
-			First_Curr = (First_Curr+1 == 4)? 0 : First_Curr + 1;
+			First_Curr = (First_Curr+1 == 3)? 0 : First_Curr + 1;
 			break;
 			
 		case ENTER:
@@ -185,13 +184,10 @@ bool First_Menu(){
 					Login_Input(HEADACC, TAILACC);
 					break;
 				case 1:
-					Register(HEADACC, &HEADACC, &TAILACC);
+					Register(&HEADACC, &TAILACC);
 					break;
 				case 2:
 					exit(0);
-					break;
-				case 3:
-					Version();
 					break;
 			}
 			break;
@@ -210,7 +206,7 @@ bool Admin_Menu(){
 	curr[Admin_Curr] = "  <+-~ [ENTER]";
 	system("CLS");
 
-	cout << "\n  Selamat Datang " << active_user <<"!!!\n\
+	cout << "\n\n\n  Selamat Datang " << active_user <<"!!!\n\
 			 \n  --+  Buat Pesanan" << curr[0] << "\
 			 \n  --+  Lihat Semua Pesanan" << curr[1] << "\
 			 \n  --+  Lihat Pesanan Akun Admin" << curr[2] << "\
@@ -251,7 +247,7 @@ bool Admin_Menu(){
 					Update_Data(active_user, &HEADACC, &TAILACC);
 					break;
 				case 6:
-					Menu_Search(&HEADACC);
+					Search(&HEADACC, &TAILACC);
 					break;
 				case 7:
 					active_user = "";
@@ -526,7 +522,12 @@ void Pesanan(Node **head, Node **tail, Node *headacc, Node *headlog){
 
 	fflush(stdin);
 	cout << "\n Berat Cucian (Kg):";
-	cin >> berat;
+	berat = Check_Int();
+	if(nomor == -9999 || berat == 0){
+		cout << "   Berat Invalid!!" << endl;
+		system("pause");
+		return;
+	}
 	cout << " ---------------------------------------------------------" << endl;
 
 	harga = berat * hrg[intkategori - 1];
@@ -557,10 +558,10 @@ void Pesanan(Node **head, Node **tail, Node *headacc, Node *headlog){
 		cout << "     ----------------------------------------------------------" << endl;
 		
 		if(opsi == KIRI){
-			cout << "\t\t\t" << char(204) << " YA " << char(185) << "\t\t  TIDAK ";
+			cout << "\t\t\t" << char(204) << " YA " << char(185) << "\t\t  TIDAK " << endl;
 		}
 		else if(opsi == KANAN){
-			cout << "\t\t\t" << "  YA "<< "\t\t" << char(204) << " TIDAK " << char(185);
+			cout << "\t\t\t" << "  YA "<< "\t\t" << char(204) << " TIDAK " << char(185) << endl;
 		}
 		
 		switch(Controller(false)){
@@ -650,12 +651,13 @@ void Add_First(Node **headacc, Node **tailacc, 	string nama, string email, strin
 	}
 }
 
-void Register(Node *head, Node **headacc, Node **tailacc){
+void Register(Node **headacc, Node **tailacc){
 	
 	string nama, email, alamat, username, password;
 	long long int no_hp;
 	
 	quickSort(&(*headacc), true, false, false);
+	ReadjustTail(*headacc, &(*tailacc));
 	
 	while(true){
 		system("CLS");
@@ -833,7 +835,7 @@ void Show(Node *head, Node *tail, bool asc, bool riwayat, string specific){
 			
 			}
 			
-			if(indeks % 5 == 0){
+			if(indeks % 5 == 0 && indeks != 0){
 				cout << " Klik '0' untuk kembali,\
 						\n Klik lainnya untuk lanjut ke halaman berikutnya.";
 				if(getch() == '0'){return;}
@@ -928,7 +930,7 @@ void Delete_First(Node **head, Node **tail){
 
 void Daftar_Kategori(){
 	
-	cout << "  ------------------------------------------------------- \
+	cout << "\n  ------------------------------------------------------- \
     	   \n |                   JENIS LAUNDRY                       |\
     	   \n  ------------------------------------------------------- ";
 	
@@ -979,8 +981,13 @@ void Update_Data(string username, Node **head, Node **tail){
 
 	cout << " No Handphone Lama\t: +62" << temp->akun.no_hp << endl;
 	cout << " No Handphone Baru\t: +62";
-	cin >> no_hp;
-	if(no_hp == 0){
+	no_hp = Check_LL_Int();
+	if(no_hp == -9999){
+		cout << "    No Handphone Invalid!!" << endl;
+		system("pause");
+		return;
+	}
+	else if(no_hp == 0){
 		no_hp = temp->akun.no_hp;
 	}
 
@@ -1229,90 +1236,47 @@ int Fibonacci_Search(Node *node, string x, int y, int n, bool id)
 	}
 }
 
-void Search(Node **head, bool id) {
+void Search(Node **head, Node **tail) {
 	system("cls");
+	
 	string Nama;
-	string test = "test";
-	int Id;
-	Node *temp = *head;
 
-	if(id == false) {
-		quickSort(head, true, false, false);
-		cout << " =========================================================\
-			\n                          SEARCH DATA                     \
-			\n =========================================================\n\
-			\n                 SEARCH NAMA COSTUMER LAUNDRY             \
-			\n ---------------------------------------------------------\n"
-			<< endl;\
+	quickSort(&(*head), true, false, false);
+	ReadjustTail(*head, &(*tail));
 
-		cout << "Masukan Nama Costumer Yang Ingin Dicari : ";
-		getline(cin, Nama); fflush(stdin);
+	Node *temp;
+	
+	cout << "\n\n =========================================================\
+		\n                          SEARCH DATA                     \
+		\n =========================================================\n\
+		\n              SEARCH USERNAME COSTUMER LAUNDRY             \
+		\n ---------------------------------------------------------\n"
+		<< endl;
 
-		int ind = Fibonacci_Search(*head, Nama, 0, lenLL(*head),false);
+	cout << " Masukan Username costumer yang"\
+	        "\n datanya ingin dicari : ";
+	fflush(stdin); getline(cin, Nama);
+
+	int ind = Fibonacci_Search(*head, Nama, 0, lenLL(*head),false);
+	
+	if (ind >= 0){
+		Node *temp = *head;
 		
-		if (ind >= 0){
-			cout << " \n===================================" << endl;
-			cout << "||        Data ditemukan         ||" << endl;
-			cout << "====================================" << endl;
-
-			cout << "\n  ----------------[" << ind << "]--------------:" << endl;
-
-			while(temp != NULL) {
-				if(temp->akun.username == Nama){
-					cout << " | Username Costumer\t: "   << temp->akun.username << endl;
-					cout << " | Nama Costumer    \t: "   << temp->akun.nama << endl;
-					cout << " | Email Costumer   \t: "   << temp->akun.email << endl;
-					cout << " | No HP Costumer   \t: "   << temp->akun.no_hp << endl;
-					cout << " | Alamat Costumer  \t: "   << temp->akun.alamat << endl;
-				}
-					temp = temp->next;
-			}
-
-			getche();
+		for(int i = 0; i < ind; i++){
+			temp = temp->next;
 		}
-		else {
-			cout << Nama << " Tidak Ada Didalam Data !!!";
-			getche();
-		}
+		
+		cout << "    ==== Data Akun ====" << endl;
+		cout << " | Username Costumer\t: "   << temp->akun.username << endl;
+		cout << " | Nama Costumer    \t: "   << temp->akun.nama << endl;
+		cout << " | Email Costumer   \t: "   << temp->akun.email << endl;
+		cout << " | No HP Costumer   \t: "   << temp->akun.no_hp << endl;
+		cout << " | Alamat Costumer  \t: "   << temp->akun.alamat << endl;
+		system("pause");
 	}
 	else {
-		cout << " =========================================================\
-			\n                          SEARCH DATA                     \
-			\n =========================================================\n\
-			\n                       SEARCH ID LAUNDRY                  \
-			\n ---------------------------------------------------------\n"
-			<< endl;
-
-		cout << "Masukan ID Laundry Yang Ingin Dicari : ";
-		cin >> Id; fflush(stdin);
-
-		int ind = Fibonacci_Search(&(*HEAD), test, Id, lenLL(&(*HEAD)), true);
-		
-		if (ind >= 0){
-			cout << " \n===================================" << endl;
-			cout << "||        Data ditemukan         ||" << endl;
-			cout << "====================================" << endl;
-
-			cout << "\n  ----------------[" << ind << "]--------------:" << endl;
-
-			while(temp != NULL) {
-				if(temp->data.id == Id){
-					cout << " | ID Laundry   \t: "   << temp->data.id       << endl;
-					cout << " | Nama Customer\t: "   << temp->data.nama    	<< endl;
-					cout << " | No Handphone \t: "   << temp->data.nomor_hp << endl;
-					cout << " | Jenis Cucian \t: "   << temp->data.kategori << endl;
-					cout << " | Berat Cucian \t: "   << temp->data.berat    << endl;
-					cout << " | Harga Cucian \t: "   << temp->data.harga    << endl;
-				}
-					temp = temp->next;
-			}
-
-			getche();
-		}
-		else {
-			cout << "ID " << Id << " Tidak Ada Didalam Data !!!";
-			getche();
-		}
+		cout << Nama << "\n   Username tidak ada didalam data !!!\n";
+		system("pause");
 	}
 }
 
@@ -1395,35 +1359,6 @@ void Menu_Sort(Node **head, Node **tail, bool riwayat, string active){
 	}
 }
 
-void Menu_Search(Node **head) {	
-	int tanya_search;
-
-	system("CLS")													;
-	cout  << endl													;
-	cout  << "===========================================" << endl	;
-	cout  << "|   Ingin mencari data berdasarkan apa?   |" << endl	;
-	cout  << "===========================================" << endl	;
-	cout  << "|          [1] Akun Costumer              |" << endl	;
-	cout  << "|          [2] ID Laundry                 |" << endl	;
-	cout  << "===========================================" << endl	;
-	cout  << endl                                                   ;
-	cout  << " Masukkan pilihan : "									;
-	
-	switch (tanya_search = getch()){
-		case ('1'):
-			Search(head, false)                                    ;
-			break                                                   ;
-		case ('2'):
-			Search(&HEAD, true);			                     	;
-			break													;
-		default:
-			system("CLS")											;
-			cout << endl											;
-			cout << " !!  Pilihan Tidak Tersedia  !!\n" << endl	    ;
-			getch()													;
-			break													;
-	}
-}
 
 int Check_Int(){
 	int var;
@@ -1504,4 +1439,16 @@ string Censorship(string teks, bool *state){
 			kalimat += huruf;
 		}
 	}
+}
+
+
+void ReadjustTail(Node *head, Node **tail){
+	
+	Node *temp = head;
+	
+	while(temp->next != NULL){
+		temp = temp->next;
+	}
+	
+	*tail = temp;
 }
