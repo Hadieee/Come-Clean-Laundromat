@@ -196,6 +196,7 @@ bool Admin_Menu(){
 			Show(HEADLOG, TAILLOG, true, true, "");
 			break;
 		case '6':
+			Update_Data(active_user, &HEADACC, &TAILACC);
 			break;
 		case '7':
 			Search(&HEADACC, &TAILACC);
