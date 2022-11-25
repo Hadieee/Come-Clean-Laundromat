@@ -308,31 +308,6 @@ bool User_Menu(){
 
 // ========= ISI MENU =========
 
-void Version(){
-
-	system("CLS");
-
-	cout << "\n\n Menu ini akan dihapus nanti,\
-			 \n Menu dibuat untuk memberi keterangan guna\
-			 \n mengetahui perkembangan program.\n\
-			 \n > Alur Menu                       [SELESAI]\
-			 \n > Struct Laundry                  [SELESAI]\
-			 \n > Struct Riwayat Laundry          [SELESAI]\
-			 \n > Struct Keanggotaan (Admin/User) [SELESAI]\
-			 \n > Add Last Laundry                [SELESAI]\
-			 \n > Delete First Laundry            [SELESAI]\
-			 \n > Add Last Riwayat Laundry        [SELESAI]\
-			 \n > Lihat Pesanan ASC/DESC          [SELESAI]\
-			 \n ---> Menu pilihan ASC / DESC belum\
-			 \n ---> Menu lihat pesanan pengguna belum\
-			 \n > Sorting						  [HAMPIR SELEAI]\
-			 \n > Searching\
-			 \n > File Eksternal\
-			 \n > Login Session                   [SELESAI]\
-			 \n > Perindah Tampilan";
-	getch();
-}
-
 int lenLL(Node *head){
 	int i = 0;
 	Node *temp = head;
