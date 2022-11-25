@@ -7,8 +7,8 @@ using namespace std;
 #define Enter 13
 #define Backspace 8
 
+char Controller(bool anti);
 string Censorship(string teks, bool *state);
-char Controller();
 void masuk(string *usn, string *teks, bool *state);
 
 
@@ -57,7 +57,10 @@ string Censorship(string teks, bool *state){
 	char huruf;
 
 	while(true){
-		huruf = getch();
+		huruf = Controller(true);
+		if(huruf == -32){
+			
+		}
 		if(huruf == Enter){
 			*state = false;
 			return kalimat;
@@ -69,7 +72,7 @@ string Censorship(string teks, bool *state){
     		kalimat.pop_back();
     		return kalimat;
 		}
-		else{
+		else if(huruf != 224 && huruf > 31){
 			cout << "#";
 			kalimat += huruf;
 		}
@@ -78,31 +81,20 @@ string Censorship(string teks, bool *state){
 
 
 
-char Controller(){
-	char arah;
+char Controller(bool anti){
+	char key;
 	char tujuan;
 	
-	switch(arah = getch()){
+	switch(key = getch()){
 		
 		case -32:
 			tujuan = getch();
-			/*
-			INFORMASI TAMBAHAN:
-			72 = Atas
-			75 = Kiri
-			77 = Kanan
-			80 = Bawah
-			*/
+			if(anti == true){ return -32; }
+			else{ return tujuan; }
 			break;
 			
 		default:
-			tujuan = arah;
-			/*
-			INFORMASI TAMBAHAN:
-			8 = Backspace
-			13 = Enter
-			27 = Escape
-			*/
+			tujuan = key;
 			break;
 	}
 	return tujuan;
