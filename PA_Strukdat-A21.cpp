@@ -132,6 +132,8 @@ int main()
 
 bool First_Menu(){
 
+	system("CLS");
+
 	cout << "\n Aplikasi Laundry\
 		     \n Versi 1.0";
 
@@ -992,6 +994,8 @@ void Search(Node **head, Node **tail) {
 	quickSort(head, true);
 	system("cls");
 	string nama;
+	Node *temp = *head;
+
 	cout << " =========================================================\
            \n                          SEARCH DATA                     \
     	   \n =========================================================\n\
@@ -1002,11 +1006,31 @@ void Search(Node **head, Node **tail) {
 	cout << "Masukan nama costumer yang ingin dicari : ";
 	getline(cin, nama); fflush(stdin);
 
-	    int ind = fibonacciSearch(*head, nama, lenLL(*head));
-    if (ind >= 0){
-        cout << "Data ditemukan pada index : " << ind;
+	int ind = fibonacciSearch(*head, nama, lenLL(*head));
+    
+	if (ind >= 0){
+		cout << " ==================================" << endl;
+		cout << "||        Data ditemukan         ||" << endl;
+		cout << " ==================================" << endl;
+
+		cout << "\n  -----------------[" << ind << "]----------------:" << endl;
+
+		while(temp->data.username != nama) {
+			if(temp->data.username == nama){
+				cout << " | Nama Customer\t: "  << temp->data.nama << endl;
+				cout << " | No Handphone \t: "   << temp->data.nomor_hp << endl;
+				cout << " | Jenis Cucian \t: "   << temp->data.kategori << endl;
+				cout << " | Berat Cucian \t: "   << temp->data.berat << endl;
+				cout << " | Harga Cucian \t: "   << temp->data.harga << endl;
+				break;
+			}
+				temp = temp->next;
+		}
+
 		getche();
 	}
-    else
+    else {
         cout << nama << " tidak ada dalam Linked List";
+		getche();
+	}
 }
