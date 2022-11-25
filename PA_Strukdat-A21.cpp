@@ -74,6 +74,9 @@ using namespace std;
 /**/
 /**/ struct Node *posisi;
 /**/
+/**/ string ctg[8] = {"Pakaian Biasa", "Stelan Jas", "Stelan Blazer",
+					  "Gaun Panjang", "Gaun Pendek", "Pakaian Rajut",
+					  "Selimut", "Bed Cover"};
 /**/ int hrg[8] = {8000, 25000, 22000,
 /**/ 			   15000, 10000, 20000,
 /**/ 			   10000, 30000};
@@ -408,7 +411,7 @@ void Login(Node *head, Node *tail){
 	
 	// Jikalau Tidak Cocoque
 	else{
-		cout << " Email atau Password\n";
+		cout << " Email atau Password Salah\n";
 		system("pause");
 	}
 }
@@ -488,6 +491,11 @@ void Pesanan(Node **head, Node **tail, Node *headacc, Node *headlog){
 	kategori = getche();
 	intkategori = (int)kategori - 48;
 	if(kategori == '\n'){
+		return;
+	}
+	else if(intkategori < 1 || intkategori > 8){
+		cout << "\n     Kategori Cucian Invalid!!\n";
+		system("pause");
 		return;
 	}
 
@@ -694,18 +702,20 @@ void Show(Node *head, Node *tail, bool asc, bool riwayat, string specific){
 				
 				if(riwayat == false){
 			
-					cout << " | Nama Customer\t: "  << temp->data.nama << endl;
+					cout << " | Username Akun\t: "   << temp->data.username << endl;
+					cout << " | Nama Customer\t: "   << temp->data.nama << endl;
 					cout << " | No Handphone \t: "   << temp->data.nomor_hp << endl;
-					cout << " | Jenis Cucian \t: "   << temp->data.kategori << endl;
+					cout << " | Jenis Cucian \t: "   << ctg[(int)temp->data.kategori - 48] << endl;
 					cout << " | Berat Cucian \t: "   << temp->data.berat << endl;
 					cout << " | Harga Cucian \t: "   << temp->data.harga << endl;
 					cout << "  ## ID-- " << temp->data.id << endl; 
 					
 				} else{
 					
-					cout << " | Nama Customer\t: "  << temp->log.nama << endl;
+					cout << " | Username Akun\t: "    << temp->log.username << endl;
+					cout << " | Nama Customer\t: "    << temp->log.nama << endl;
 					cout << " | No Handphone\t\t: "   << temp->log.nomor_hp << endl;
-					cout << " | Jenis Cucian\t\t: "   << temp->log.kategori << endl;
+					cout << " | Jenis Cucian\t\t: "   << ctg[(int)temp->log.kategori - 48] << endl;
 					cout << " | Berat Cucian\t\t: "   << temp->log.berat << endl;
 					cout << " | Harga Cucian\t\t: "   << temp->log.harga << endl;
 					
@@ -828,17 +838,14 @@ void Daftar_Kategori(){
 	
 	cout << "  ------------------------------------------------------- \
     	   \n |                   JENIS LAUNDRY                       |\
-    	   \n  ------------------------------------------------------- \
-		   \n | [1]  Pakaian Biasa                                    |\
-		   \n | [2]  Stelan Jas                                       |\
-		   \n | [3]  Stelan Blazer                                    |\
-		   \n | [4]  Gaun Panjang                                     |\
-		   \n | [5]  Gaun Pendek                                      |\
-		   \n | [6]  Pakaian Rajut                                    |\
-		   \n | [7]  Selimut                                          |\
-		   \n | [8]  Bed Cover                                        |\
-		   \n  -------------------------------------------------------"
-		 << endl;
+    	   \n  ------------------------------------------------------- ";
+	
+	for(int i = 0; i < sizeof(hrg)/sizeof(hrg[0]);i++){
+		cout << "\n | [" << i+1 <<"]  "<< ctg[i] << "  \t\tRp "<< hrg[i]<<"/kg \t\t |";
+	}
+	
+	cout << "\n  -------------------------------------------------------" << endl;
+
 }
 
 void Update_Data(string username, Node **head, Node **tail){
@@ -847,9 +854,9 @@ void Update_Data(string username, Node **head, Node **tail){
 	long long int no_hp;
 
 	cout << " =========================================================\
-           \n                          FORM USER                       \
+           \n                          FORM UPDATE                       \
     	   \n =========================================================\n\n \
-    	   \n              UPDATE DATA AKUN CUSTOMER LAUNDRY           \
+    	   \n                   UPDATE DATA AKUN LAUNDRY               \
     	   \n ---------------------------------------------------------\
     	   \n\
     	   \n           (Ketik '0' untuk menggunakan data lama)"
