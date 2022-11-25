@@ -111,15 +111,17 @@ using namespace std;
 /**/ int  Check_Int();
 /**/ long long int Check_LL_Int();
 /**/ long long int gettime();
-/**/ char Controller();
+/**/ char Controller(bool anti);
 /**/ struct Node *getTail(struct Node *cur);
 /**/ struct Node *partition(struct Node *head, struct Node *end, struct Node **newHead, struct Node **newEnd, bool username);
 /**/ struct Node *quickSortRecur(struct Node *head, struct Node *end, bool username);
+/**/ string Censorship(string teks, bool *state);
 /**/
 /**/
 // --------- Utama ------- //
 /**/ void Register(Node *head, Node **headacc, Node **tailacc);
-/**/ void Login(Node *head, Node *tail);
+/**/ void Login_Input(Node *head, Node *tail);
+/**/ void Login(Node *head, Node *tail, string usn, string pass);
 /**/ void Add_Last(Node **head, Node **tail, char kategori, string nama, string alamat, int harga, long long int nomor, double berat, int id);
 /**/
 /**/ 
@@ -165,7 +167,7 @@ bool First_Menu(){
 		     \n  --+  Exit" << curr[2]<< "\
 		     \n  --+  Versi Aplikasi" << curr[3] << endl;
 		     
-	switch (Controller()){
+	switch (Controller(false)){
 		case ATAS:
 			First_Curr = (First_Curr-1 == -1)? 3 : First_Curr - 1;
 			break;
@@ -181,7 +183,7 @@ bool First_Menu(){
 			switch(First_Curr){
 				
 				case 0:
-					Login(HEADACC, TAILACC);
+					Login_Input(HEADACC, TAILACC);
 					break;
 				case 1:
 					Register(HEADACC, &HEADACC, &TAILACC);
@@ -220,7 +222,7 @@ bool Admin_Menu(){
 			 \n  --+  Keluar" << curr[7] << endl;
 
 
-	switch (Controller()){
+	switch (Controller(false)){
 		case ATAS:
 			Admin_Curr = (Admin_Curr-1 == -1)? 7 : Admin_Curr - 1;
 			break;
@@ -276,7 +278,7 @@ bool User_Menu(){
 		     \n  --+  Update Data Akun" << curr[2] << "\
 			 \n  --+  Keluar" << curr[3] << endl;
 
-	switch (Controller()){
+	switch (Controller(false)){
 		case ATAS:
 			User_Curr = (User_Curr-1 == -1)? 3 : User_Curr - 1;
 			break;
@@ -364,31 +366,49 @@ long long int gettime(){
 }
 
 
-void Login(Node *head, Node *tail){
-	string USN, PASS;
-	bool logged = false;
-
-	system("CLS");
-
-	cout << "\n Username\t: ";
-	fflush(stdin);
-	getline(cin, USN);
-
-	cout << " Password\t: ";
+void Login_Input(Node *head, Node *tail){
+	string pass = "";
+	string usn = "";
+	bool state = true;
 	
-	fflush(stdin);
-	getline(cin, PASS);
+	while(state == true){
+	
+		system("CLS");
+		cout << "\n\n  |  Username: ";
+		
+		if (!(usn.empty())){
+			cout << usn << endl;
+		}
+		else{
+			cin >> usn;
+		}
+		
+		
+		cout << "  |  Password: ";
+		for(int i = 0; i < pass.length(); i++){
+			cout << "#";
+		}
+		
+		pass = Censorship(pass, &state);
+	}
+	
+	Login(head, tail, usn, pass);
+}
+
+
+void Login(Node *head, Node *tail, string usn, string pass){
+	bool logged = false;
 	
 	// traversal
 	Node *temp = head;
 	
-	while(temp->akun.username != USN && temp->next != NULL){
+	while(temp->akun.username != usn && temp->next != NULL){
 		temp = temp->next;
 	}
 	
 	// Cek Kecocokan Username dengan Password
-	if(temp->akun.username == USN){
-		if(temp->akun.password == PASS){
+	if(temp->akun.username == usn){
+		if(temp->akun.password == pass){
 			logged = true;
 		}
 	}
@@ -399,7 +419,7 @@ void Login(Node *head, Node *tail){
 		active_user = temp->akun.username;
 		
 		// Jika Admin
-		if (USN == "Admind"){
+		if (usn == "Admind"){
 			while(Admin_Menu() == true){};
 		}
 		
@@ -411,7 +431,7 @@ void Login(Node *head, Node *tail){
 	
 	// Jikalau Tidak Cocoque
 	else{
-		cout << " Email atau Password Salah\n";
+		cout << "\n Email atau Password Salah\n\n";
 		system("pause");
 	}
 }
@@ -1291,19 +1311,47 @@ long long int Check_LL_Int(){
 }
 
 
-char Controller(){
-	char arah;
+char Controller(bool anti){
+	char key;
 	char tujuan;
 	
-	switch(arah = getch()){
+	switch(key = getch()){
 		
 		case -32:
 			tujuan = getch();
+			if(anti == true){ return -32; }
+			else{ return tujuan; }
 			break;
 			
 		default:
-			tujuan = arah;
+			tujuan = key;
 			break;
 	}
 	return tujuan;
+}
+
+
+string Censorship(string teks, bool *state){
+	string kalimat = teks;
+	char huruf;
+
+	while(true){
+		huruf = Controller(true);
+		if(huruf == -32){}
+		if(huruf == ENTER){
+			*state = false;
+			return kalimat;
+		}
+		else if(kalimat.empty() && huruf == BACKSPACE){
+    		return kalimat;
+		}
+		else if(!kalimat.empty() && huruf == BACKSPACE){
+    		kalimat.pop_back();
+    		return kalimat;
+		}
+		else if(huruf != 224 && huruf > 31){
+			cout << "#";
+			kalimat += huruf;
+		}
+	}
 }
