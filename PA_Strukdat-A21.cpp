@@ -198,7 +198,7 @@ bool Admin_Menu(){
 		case '6':
 			break;
 		case '7':
-			Search(&HEAD, &TAIL);
+			Search(&HEADACC, &TAILACC);
 			break;
 		case '8':
 			active_user = "";
@@ -515,7 +515,7 @@ void Register(Node *head, Node **headacc, Node **tailacc){
 		fflush(stdin);
 		getline(cin, username);
 		
-		if (fibonacciSearch(head, username, lenLL(head)) != -1){
+		if (fibonacciSearch(*headacc, username, lenLL(*headacc)) != -1){
 	        cout << "    Username sudah ada\n";
 	        system("pause");
 		}
@@ -1003,7 +1003,7 @@ int fibonacciSearch(Node *node, string x, int n)
 void Search(Node **head, Node **tail) {
 	quickSort(head, true);
 	system("cls");
-	string nama;
+	string Nama;
 	Node *temp = *head;
 
 	cout << " =========================================================\
@@ -1014,25 +1014,24 @@ void Search(Node **head, Node **tail) {
 		 << endl;
 
 	cout << "Masukan nama costumer yang ingin dicari : ";
-	getline(cin, nama); fflush(stdin);
+	getline(cin, Nama); fflush(stdin);
 
-	int ind = fibonacciSearch(*head, nama, lenLL(*head));
+	int ind = fibonacciSearch(*head, Nama, lenLL(*head));
     
 	if (ind >= 0){
-		cout << " \n==================================" << endl;
+		cout << " \n===================================" << endl;
 		cout << "||        Data ditemukan         ||" << endl;
-		cout << " ==================================" << endl;
+		cout << "====================================" << endl;
 
 		cout << "\n  ----------------[" << ind << "]--------------:" << endl;
 
 		while(temp != NULL) {
-			if(temp->akun.username == nama){
-				cout << " | Nama Customer\t: "  << temp->data.nama << endl;
-				cout << " | No Handphone \t: "   << temp->data.nomor_hp << endl;
-				cout << " | Jenis Cucian \t: "   << temp->data.kategori << endl;
-				cout << " | Berat Cucian \t: "   << temp->data.berat << endl;
-				cout << " | Harga Cucian \t: "   << temp->data.harga << endl;
-				break;
+			if(temp->akun.username == Nama){
+				cout << " | Username Costumer\t: "   << temp->akun.username << endl;
+				cout << " | Nama Costumer    \t: "   << temp->akun.nama << endl;
+				cout << " | Email Costumer   \t: "   << temp->akun.email << endl;
+				cout << " | No HP Costumer   \t: "   << temp->akun.no_hp << endl;
+				cout << " | Alamat Costumer  \t: "   << temp->akun.alamat << endl;
 			}
 				temp = temp->next;
 		}
@@ -1040,7 +1039,7 @@ void Search(Node **head, Node **tail) {
 		getche();
 	}
     else {
-        cout << nama << " tidak ada dalam Linked List";
+        cout << Nama << " tidak ada dalam Linked List";
 		getche();
 	}
 }
