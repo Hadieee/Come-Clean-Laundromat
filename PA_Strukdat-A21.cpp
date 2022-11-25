@@ -105,7 +105,7 @@ using namespace std;
 /**/ void Show(Node *head, Node *tail, bool asc, bool riwayat, string specific);
 /**/ void Menu_Sort(Node **head, Node **tail, bool riwayat, string active);
 /**/ int  lenLL(Node *head);
-/**/ void quickSort(struct Node **headRef, bool username);
+/**/ void quickSort(struct Node **headRef, bool username, bool id);
 /**/ int  Fibonacci_Search(Node *node, string x, int y, int n, bool id);
 /**/ void Search(Node **head, bool id);
 /**/ void Menu_Search(Node **head);
@@ -114,8 +114,8 @@ using namespace std;
 /**/ long long int gettime();
 /**/ char Controller(bool anti);
 /**/ struct Node *getTail(struct Node *cur);
-/**/ struct Node *partition(struct Node *head, struct Node *end, struct Node **newHead, struct Node **newEnd, bool username);
-/**/ struct Node *quickSortRecur(struct Node *head, struct Node *end, bool username);
+/**/ struct Node *partition(struct Node *head, struct Node *end, struct Node **newHead, struct Node **newEnd, bool username, bool id);
+/**/ struct Node *quickSortRecur(struct Node *head, struct Node *end, bool username, bool id);
 /**/ string Censorship(string teks, bool *state);
 /**/
 /**/
@@ -594,7 +594,7 @@ void Register(Node *head, Node **headacc, Node **tailacc){
 	string nama, email, alamat, username, password;
 	long long int no_hp;
 	
-	quickSort(&(*headacc), true);
+	quickSort(&(*headacc), true, false);
 	
 	while(true){
 		system("CLS");
@@ -804,7 +804,7 @@ void To_Riwayat(Node **head, Node **tail, Node **headlog, Node **taillog){
 	newNode->log.berat    = (*head)->data.berat;
 	newNode->log.harga    = (*head)->data.harga;
 	newNode->log.username = (*head)->data.username;
-	newNode->log.tanggal  = gettime();
+	newNode->log.username  = gettime();
 	newNode->prev = NULL;
 	newNode->next = NULL;
 
@@ -965,7 +965,7 @@ struct Node *getTail(struct Node *cur){
     return cur;
 }
  
-struct Node *partition(struct Node *head, struct Node *end, struct Node **newHead, struct Node **newEnd, bool username){
+struct Node *partition(struct Node *head, struct Node *end, struct Node **newHead, struct Node **newEnd, bool username, bool id){
     struct Node *pivot = end;
     struct Node *prev = NULL, *cur = head, *tail = pivot;
     
@@ -987,20 +987,41 @@ struct Node *partition(struct Node *head, struct Node *end, struct Node **newHea
 			}
 		}
 		else{
-			if (cur->log.tanggal < pivot->log.tanggal){
-				if ((*newHead) == NULL)
-				(*newHead) = cur;
-				prev = cur;
-				cur = cur->next;
-			}else{
-				if (prev)
-				prev->next = cur->next;
-				struct Node *tmp = cur->next;
-				cur->next = NULL;
-				tail->next = cur;
-				tail = cur;
-				cur = tmp;
-			}	
+			if(id == true){
+				if (cur->log.id < pivot->log.id){
+					if ((*newHead) == NULL)
+					(*newHead) = cur;
+					prev = cur;
+					cur = cur->next;
+				}else{
+					if (prev)
+					prev->next = cur->next;
+					struct Node *tmp = cur->next;
+					cur->next = NULL;
+					tail->next = cur;
+					tail = cur;
+					cur = tmp;
+				}
+			}
+			else if(id == false) {
+				continue;
+			}
+			else {
+				if (cur->log.username < pivot->log.username){
+					if ((*newHead) == NULL)
+					(*newHead) = cur;
+					prev = cur;
+					cur = cur->next;
+				}else{
+					if (prev)
+					prev->next = cur->next;
+					struct Node *tmp = cur->next;
+					cur->next = NULL;
+					tail->next = cur;
+					tail = cur;
+					cur = tmp;
+				}	
+			}
 		}
     }
     if ((*newHead) == NULL) (*newHead) = pivot;
@@ -1008,44 +1029,64 @@ struct Node *partition(struct Node *head, struct Node *end, struct Node **newHea
     return pivot;
 }
  
-struct Node *quickSortRecur(struct Node *head, struct Node *end, bool username){
+struct Node *quickSortRecur(struct Node *head, struct Node *end, bool username, bool id){
     if (!head || head == end) return head;
     Node *newHead = NULL, *newEnd = NULL;
 
 	if(username == true) {
-		struct Node* pivot = partition(head, end, &newHead, &newEnd, true);
+		struct Node* pivot = partition(head, end, &newHead, &newEnd, true, false);
 		if (newHead != pivot) {
 			struct Node *tmp = newHead;
 			while (tmp->next != pivot) tmp = tmp->next;
 			tmp->next = NULL;
-			newHead = quickSortRecur(newHead, tmp, true);
+			newHead = quickSortRecur(newHead, tmp, true, false);
 			tmp = getTail(newHead);
 			tmp->next = pivot;
-			pivot->next = quickSortRecur(pivot->next, newEnd, true);
+			pivot->next = quickSortRecur(pivot->next, newEnd, true, false);
 		}
 	}
     else {
-		struct Node* pivot = partition(head, end, &newHead, &newEnd, false);
-		if (newHead != pivot){
-			struct Node *tmp = newHead;
-			while (tmp->next != pivot) tmp = tmp->next;
-			tmp->next = NULL;
-			newHead = quickSortRecur(newHead, tmp, false);
-			tmp = getTail(newHead);
-			tmp->next = pivot;
-			pivot->next = quickSortRecur(pivot->next, newEnd, false);
+		if(id == true){
+			struct Node* pivot = partition(head, end, &newHead, &newEnd, false, true);
+			if (newHead != pivot) {
+				struct Node *tmp = newHead;
+				while (tmp->next != pivot) tmp = tmp->next;
+				tmp->next = NULL;
+				newHead = quickSortRecur(newHead, tmp, false, true);
+				tmp = getTail(newHead);
+				tmp->next = pivot;
+				pivot->next = quickSortRecur(pivot->next, newEnd, false, true);
+			}
+		}
+		else {		
+			struct Node* pivot = partition(head, end, &newHead, &newEnd, false, false);
+			if (newHead != pivot){
+				struct Node *tmp = newHead;
+				while (tmp->next != pivot) tmp = tmp->next;
+				tmp->next = NULL;
+				newHead = quickSortRecur(newHead, tmp, false, false);
+				tmp = getTail(newHead);
+				tmp->next = pivot;
+				pivot->next = quickSortRecur(pivot->next, newEnd, false, false);
+			}
 		}
 	}
 	
     return newHead;
 }
  
-void quickSort(struct Node **headRef, bool username){
+void quickSort(struct Node **headRef, bool username, bool id){
 	if(username == true){
-    	(*headRef) = quickSortRecur(*headRef, getTail(*headRef), true);
+    	(*headRef) = quickSortRecur(*headRef, getTail(*headRef), true, false);
 	}
 	else{
-		(*headRef) = quickSortRecur(*headRef, getTail(*headRef), false);
+		if(id == true){
+			(*headRef) = quickSortRecur(*headRef, getTail(*headRef), false, true);
+		}
+
+		else{
+			(*headRef) = quickSortRecur(*headRef, getTail(*headRef), false, false);
+		}
 	}
     return;
 }
@@ -1167,7 +1208,7 @@ void Search(Node **head, bool id) {
 	Node *temp = *head;
 
 	if(id == false) {
-		quickSort(head, true);
+		quickSort(head, true, false);
 		cout << " =========================================================\
 			\n                          SEARCH DATA                     \
 			\n =========================================================\n\
@@ -1283,13 +1324,13 @@ void Menu_Sort(Node **head, Node **tail, bool riwayat, string active){
 			system("CLS")												;
 	    	switch (tanya_atribut){
 		        case '1':
-					if(riwayat == true){quickSort(&(*head), true);}		;
-					Show(*head, *tail, asc, riwayat, active)			;
-					break												;
+					if(riwayat == true){quickSort(&(*head), true, false);}			;
+					Show(*head, *tail, asc, riwayat, active)						;
+					break															;
 		        case '2':
-					if(riwayat == true){quickSort(&(*head), false);}	;
-					Show(*head, *tail, asc, riwayat, active)			;
-					break												;
+					if(riwayat == true){quickSort(&(*head), false, true);}			;
+					Show(*head, *tail, asc, riwayat, active)						;
+					break															;
 		        default:
 					cout << "\n !!  Pilihan Tidak Tersedia  !!" << endl				;
 					getch()															;
