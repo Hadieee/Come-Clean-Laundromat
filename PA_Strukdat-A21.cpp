@@ -103,6 +103,7 @@ using namespace std;
 // --------- Misc ------- //
 /**/ void Version(); //<----------- Hapus Nanti
 /**/ void Show(Node *head, Node *tail, bool asc, bool riwayat, string specific);
+/**/ void Menu_Sort(Node **head, Node **tail, bool riwayat, string active);
 /**/ int  lenLL(Node *head);
 /**/ void quickSort(struct Node **headRef, bool username);
 /**/ int  Fibonacci_Search(Node *node, string x, int y, int n, bool id);
@@ -235,16 +236,16 @@ bool Admin_Menu(){
 					Pesanan(&HEAD, &TAIL, HEADACC, HEADLOG);
 					break;
 				case 1:
-					Show(HEAD, TAIL, true, false, "");
+					Menu_Sort(&HEAD, &TAIL, false, "");
 					break;
 				case 2:
-					Show(HEAD, TAIL, true, false, active_user);
+					Menu_Sort(&HEAD, &TAIL, false, active_user);
 					break;
 				case 3:
 					To_Riwayat(&HEAD, &TAIL, &HEADLOG, &TAILLOG);
 					break;
 				case 4:
-					Show(HEADLOG, TAILLOG, true, true, "");
+					Menu_Sort(&HEAD, &TAIL, true, "");
 					break;
 				case 5:
 					Update_Data(active_user, &HEADACC, &TAILACC);
@@ -291,7 +292,7 @@ bool User_Menu(){
 					Pesanan(&HEAD, &TAIL, HEADACC, HEADLOG);
 					break;
 				case 1:
-					Show(HEAD, TAIL, true, false, active_user);
+					Menu_Sort(&HEAD, &TAIL, false, active_user);
 					break;
 				case 2:
 					Update_Data(active_user, &HEADACC, &TAILACC);
@@ -1220,6 +1221,69 @@ void Search(Node **head, bool id) {
 			cout << "ID " << Id << " Tidak Ada Didalam Data !!!";
 			getche();
 		}
+	}
+}
+
+void Menu_Sort(Node **head, Node **tail, bool riwayat, string active){
+
+	int tanya_sort, tanya_atribut;
+	bool asc;
+	system("CLS")		
+													;
+	cout << endl														;
+	cout << "======================================" << endl			;
+    cout << "| Ingin mengurutkan data secara apa? |" << endl			;
+    cout << "======================================" << endl			;
+    cout << "|  [1] Ascending  |  [2] Descending  |" << endl			;
+    cout << "======================================" << endl			;
+    cout << endl														;
+    cout << "Masukkan pilihan : "						          		;
+    tanya_sort = getch()												;
+    switch (tanya_sort)
+	{
+    	case ('1'):
+		case ('2'):
+		{
+			asc = (tanya_sort == '1')? true : false						;
+			
+			system("CLS")												;
+			cout << endl												;
+			cout << "==============================" << endl			;
+    		cout << "|    Sorting berdasarkan?    |" << endl			;
+    		cout << "==============================" << endl			;
+    		cout << "|    [1] Username Costumer   |" << endl			;
+    		cout << "|    [2] ID Laundry Costumer |" << endl			;
+    		cout << "==============================" << endl			;
+    		cout << endl												;
+    		cout << " Masukkan pilihan\t: "								;
+    		
+			tanya_atribut = getch()										;
+			system("CLS")												;
+	    	switch (tanya_atribut){
+		        case ('1'):
+					{quickSort(head, true)		                    	;
+					Show(*head, *tail, asc, riwayat, active)				;
+					break												;}
+		        case ('2'):
+					{quickSort(head, false)								;
+					Show(*head, *tail, asc, riwayat, active)				;
+					break												;}
+		        default:
+				{
+		        	system("CLS")													;
+					cout << " !!  Pilihan Tidak Tersedia  !!" << endl				;
+					getch()															;
+					system("CLS")													;
+					break															;}
+    		}
+    		break;
+		}
+		default:
+			{cout << endl															;
+			cout << " !!  Pilihan Tidak Tersedia  !!" << endl						;
+			getch()																	;
+			system("CLS")															;
+			break																	;}
 	}
 }
 
