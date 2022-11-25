@@ -247,7 +247,7 @@ bool Admin_Menu(){
 					To_Riwayat(&HEAD, &TAIL, &HEADLOG, &TAILLOG);
 					break;
 				case 4:
-					Menu_Sort(&HEAD, &TAIL, true, "");
+					Menu_Sort(&HEADACC, &TAILACC, true, "");
 					break;
 				case 5:
 					Update_Data(active_user, &HEADACC, &TAILACC);
@@ -1253,59 +1253,57 @@ void Menu_Sort(Node **head, Node **tail, bool riwayat, string active){
 	system("CLS")		
 													;
 	cout << endl														;
-	cout << "======================================" << endl			;
-    cout << "| Ingin mengurutkan data secara apa? |" << endl			;
-    cout << "======================================" << endl			;
-    cout << "|  [1] Ascending  |  [2] Descending  |" << endl			;
-    cout << "======================================" << endl			;
+	cout << "  ============================================" << endl			;
+    cout << " |       Ingin melihat data secara apa?       |" << endl			;
+    cout << "  ============================================" << endl			;
+    cout << " |  [1] Awal ke Akhir  |  [2] Akhir ke Awal   |" << endl			;
+    cout << "  ============================================" << endl			;
     cout << endl														;
-    cout << "Masukkan pilihan : "						          		;
+    cout << " Masukkan pilihan : "						          		;
     tanya_sort = getch()												;
-    switch (tanya_sort)
-	{
-    	case ('1'):
-		case ('2'):
-		{
+    
+    switch (tanya_sort){
+    	
+    	case '1':
+		case '2':
 			asc = (tanya_sort == '1')? true : false						;
 			
 			system("CLS")												;
 			cout << endl												;
-			cout << "==============================" << endl			;
-    		cout << "|    Sorting berdasarkan?    |" << endl			;
-    		cout << "==============================" << endl			;
-    		cout << "|    [1] Username Costumer   |" << endl			;
-    		cout << "|    [2] ID Laundry Costumer |" << endl			;
-    		cout << "==============================" << endl			;
+			cout << "  ==============================" << endl			;
+    		cout << " |       Urut berdasarkan?      |" << endl			;
+    		cout << "  ==============================" << endl			;
+    		cout << " |    [1] Username              |" << endl			;
+    		cout << " |    [2] ID Laundry            |" << endl			;
+    		cout << "  ==============================" << endl			;
     		cout << endl												;
     		cout << " Masukkan pilihan\t: "								;
     		
 			tanya_atribut = getch()										;
 			system("CLS")												;
 	    	switch (tanya_atribut){
-		        case ('1'):
-					{quickSort(head, true)		                    	;
-					Show(*head, *tail, asc, riwayat, active)				;
-					break												;}
-		        case ('2'):
-					{quickSort(head, false)								;
-					Show(*head, *tail, asc, riwayat, active)				;
-					break												;}
+		        case '1':
+					if(riwayat == true){quickSort(&(*head), true);}		;
+					Show(*head, *tail, asc, riwayat, active)			;
+					break												;
+		        case '2':
+					if(riwayat == true){quickSort(&(*head), false);}	;
+					Show(*head, *tail, asc, riwayat, active)			;
+					break												;
 		        default:
-				{
-		        	system("CLS")													;
-					cout << " !!  Pilihan Tidak Tersedia  !!" << endl				;
+					cout << "\n !!  Pilihan Tidak Tersedia  !!" << endl				;
 					getch()															;
 					system("CLS")													;
-					break															;}
+					break															;
     		}
     		break;
-		}
+    		
 		default:
-			{cout << endl															;
+			cout << endl															;
 			cout << " !!  Pilihan Tidak Tersedia  !!" << endl						;
 			getch()																	;
 			system("CLS")															;
-			break																	;}
+			break																	;
 	}
 }
 
