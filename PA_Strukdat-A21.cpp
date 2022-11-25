@@ -541,15 +541,16 @@ void Add_First(Node **headacc, Node **tailacc, 	string nama, string email, strin
 	newNode->akun.alamat = alamat;
 	newNode->akun.username = username;
 	newNode->akun.password = password;
+	newNode->prev = NULL;
 
 	if (*headacc == NULL && *tailacc == NULL){
+		newNode->next = NULL;
 		*headacc = newNode;
 		*tailacc = newNode;
 	}
 	else{
 		(*headacc)->prev = newNode;
 		newNode->next = *headacc;
-		newNode->prev = NULL;
 		*headacc = newNode;
 	}
 }
@@ -932,12 +933,14 @@ struct Node *partition(struct Node *head, struct Node *end, struct Node **newHea
     
     while (cur != pivot){
 		if(username == true){
-			if (cur->data.username < pivot->data.username){
-				if ((*newHead) == NULL) (*newHead) = cur;
+			if (cur->akun.username < pivot->akun.username){
+				if ((*newHead) == NULL)
+				(*newHead) = cur;
 				prev = cur;
 				cur = cur->next;
 			}else{
-				if (prev) prev->next = cur->next;
+				if (prev)
+				prev->next = cur->next;
 				struct Node *tmp = cur->next;
 				cur->next = NULL;
 				tail->next = cur;
@@ -947,11 +950,13 @@ struct Node *partition(struct Node *head, struct Node *end, struct Node **newHea
 		}
 		else{
 			if (cur->log.tanggal < pivot->log.tanggal){
-				if ((*newHead) == NULL) (*newHead) = cur;
+				if ((*newHead) == NULL)
+				(*newHead) = cur;
 				prev = cur;
 				cur = cur->next;
 			}else{
-				if (prev) prev->next = cur->next;
+				if (prev)
+				prev->next = cur->next;
 				struct Node *tmp = cur->next;
 				cur->next = NULL;
 				tail->next = cur;
