@@ -19,6 +19,7 @@ using namespace std;
 
 ////   D E K L A R A S I   ////
 /**/ struct Data_Laundry{
+/**/	int id;
 /**/ 	string nama;
 /**/ 	long long int nomor_hp;
 /**/ 	string alamat;
@@ -31,6 +32,7 @@ using namespace std;
 ////
 ////
 /**/ struct Data_Riwayat{
+/**/    int id;
 /**/ 	string nama;
 /**/ 	long long int nomor_hp;
 /**/	string alamat;
@@ -114,11 +116,11 @@ using namespace std;
 // --------- Utama ------- //
 /**/ void Register(Node *head, Node **headacc, Node **tailacc);
 /**/ void Login(Node *head, Node *tail);
-/**/ void Add_Last(Node **head, Node **tail, char kategori, string nama, string alamat, int harga, long long int nomor, double berat);
+/**/ void Add_Last(Node **head, Node **tail, char kategori, string nama, string alamat, int harga, long long int nomor, double berat, int id);
 /**/
 /**/ 
 // --------- User -------- //
-/**/ void Pesanan(Node **head, Node **tail, Node *headlog);
+/**/ void Pesanan(Node **head, Node **tail, Node *headacc, Node *headlog);
 /**/ void Update_Data(string username, Node **head, Node **tail);
 /**/ 
 /**/ 
@@ -226,7 +228,7 @@ bool Admin_Menu(){
 		case ENTER:
 			switch (Admin_Curr){
 				case 0:
-					Pesanan(&HEAD, &TAIL, HEADACC);
+					Pesanan(&HEAD, &TAIL, HEADACC, HEADLOG);
 					break;
 				case 1:
 					Show(HEAD, TAIL, true, false, "");
@@ -282,7 +284,7 @@ bool User_Menu(){
 		case ENTER:
 			switch (User_Curr){
 				case 0:
-					Pesanan(&HEAD, &TAIL, HEADACC);
+					Pesanan(&HEAD, &TAIL, HEADACC, HEADLOG);
 					break;
 				case 1:
 					Show(HEAD, TAIL, true, false, active_user);
@@ -415,7 +417,7 @@ void Login(Node *head, Node *tail){
 
 // ==================== USER ===================== //
 
-void Pesanan(Node **head, Node **tail, Node *headacc){
+void Pesanan(Node **head, Node **tail, Node *headacc, Node *headlog){
 	system("cls");
 	char kategori;
 	string nama;
@@ -496,7 +498,8 @@ void Pesanan(Node **head, Node **tail, Node *headacc){
 	harga = berat * hrg[intkategori - 1];
 	cout << harga;
 
-	Add_Last(&(*head), &(*tail), kategori, nama, alamat, harga, nomor, berat);
+	int id = lenLL(*head) + lenLL(headlog);
+	Add_Last(&(*head), &(*tail), kategori, nama, alamat, harga, nomor, berat, id);
 
 	cout << endl;
 	cout << "  =======================================================" << endl;
@@ -505,10 +508,11 @@ void Pesanan(Node **head, Node **tail, Node *headacc){
 	system("pause");
 }
 
-void Add_Last(Node **head, Node **tail, char kategori, string nama,	string alamat, int harga, long long int nomor, double berat){
+void Add_Last(Node **head, Node **tail, char kategori, string nama,	string alamat, int harga, long long int nomor, double berat, int id){
 	// Tambahkan Data ke Struct (Add Last) 
 	Node *newNode = new Node;
 
+	newNode->data.id = id;
 	newNode->data.nama = nama;
 	newNode->data.nomor_hp = nomor;
 	newNode->data.kategori = kategori;
@@ -694,6 +698,7 @@ void Show(Node *head, Node *tail, bool asc, bool riwayat, string specific){
 					cout << " | Jenis Cucian \t: "   << temp->data.kategori << endl;
 					cout << " | Berat Cucian \t: "   << temp->data.berat << endl;
 					cout << " | Harga Cucian \t: "   << temp->data.harga << endl;
+					cout << "  ## ID-- " << temp->data.id << endl; 
 					
 				} else{
 					
@@ -718,6 +723,7 @@ void Show(Node *head, Node *tail, bool asc, bool riwayat, string specific){
 					cout << (hour - 10 > 0 ? "" : "0") << hour << ":";
 					cout << (min - 10 > 0 ? "" : "0")  << min  << ":";
 					cout << (sec - 10 > 0 ? "" : "0")  << sec  << endl;
+					cout << "  ## ID-- " << temp->log.id << endl;
 					
 				}
 			
@@ -757,6 +763,7 @@ void To_Riwayat(Node **head, Node **tail, Node **headlog, Node **taillog){
 	}
 	Node *newNode = new Node;
 
+	newNode->log.id       = (*head)->data.id;
 	newNode->log.nama     = (*head)->data.nama;
 	newNode->log.nomor_hp = (*head)->data.nomor_hp;
 	newNode->log.kategori = (*head)->data.kategori;
